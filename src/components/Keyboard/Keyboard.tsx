@@ -8,21 +8,16 @@ type Props = {
 
 const Keyboard = ({ layout, pressedCodes, shiftActive }: Props) => {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "6px",
-        padding: "12px",
-        userSelect: "none",
-        borderRadius: "12px",
-        background: "white",
-      }}
-    >
+    <div className="flex flex-col gap-1.5 p-3 select-none rounded-xl bg-white">
       {layout.rows.map((row, i) => (
-        <div key={i} style={{ display: "flex", gap: "6px" }}>
+        <div key={i} className="flex gap-1.5">
           {row.map((key) => {
             const isPressed = pressedCodes.has(key.code);
+            const baseClasses =
+              "min-w-[40px] h-[52px] flex items-center justify-center rounded-md text-sm border translate-y-[2px] transition-[background-color,transform,border-color] duration-[80ms] ease";
+            const stateClasses = isPressed
+              ? "bg-blue-500 border-blue-400 border-b text-white"
+              : "bg-neutral-800 border-neutral-700 border-b-[3px] text-neutral-200";
             const displayText =
               shiftActive && key.shiftLabel ? key.shiftLabel : key.label;
             return (
@@ -30,23 +25,10 @@ const Keyboard = ({ layout, pressedCodes, shiftActive }: Props) => {
                 key={key.code}
                 style={{
                   flex: `${key.width ?? 1} 1 0`,
-                  background: isPressed ? "#3b82f6" : "#262626",
-                  minWidth: "40px",
-                  height: "52px",
-                  border: isPressed ? "1px solid #60a5fa" : "1px solid #404040",
-                  borderRadius: "6px",
-                  borderBottomWidth: isPressed ? "1px" : "3px",
-                  color: isPressed ? "#ffffff" : "#e5e5e5",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "14px",
-                  transition:
-                    "background-color 80ms ease, transform 80ms ease, border-color 80ms ease",
-                  transform: "translateY(2px)",
                 }}
+                className={`${baseClasses} ${stateClasses}`}
               >
-                <span style={{ pointerEvents: "none" }}>{displayText}</span>
+                <span className="pointer-events-none">{displayText}</span>
               </div>
             );
           })}
