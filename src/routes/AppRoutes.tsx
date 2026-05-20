@@ -1,6 +1,6 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
-import PlayPage from "../pages/PlayPage";
+import PlayPage from "../pages/Play/PlayPage";
 
 const AppRoutes = () =>
   createBrowserRouter([
