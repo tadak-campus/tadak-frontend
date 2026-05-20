@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
+import PlayPage from "../pages/PlayPage";
 
 const AppRoutes = () =>
   createBrowserRouter([
@@ -21,7 +22,7 @@ const AppRoutes = () =>
         },
         {
           path: "/play",
-          element: <div>Play</div>,
+          element: <PlayPage />,
         },
         {
           path: "/result",
