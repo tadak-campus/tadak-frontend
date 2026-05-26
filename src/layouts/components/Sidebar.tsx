@@ -1,4 +1,5 @@
 import { type ElementType } from "react";
+import { useLocation } from "react-router-dom";
 import CloudOutlinedIcon from "@mui/icons-material/CloudOutlined";
 import KeyboardOutlinedIcon from "@mui/icons-material/KeyboardOutlined";
 import StorefrontOutlinedIcon from "@mui/icons-material/StorefrontOutlined";
@@ -11,6 +12,7 @@ import {
   sidebarLogoImage,
   sidebarNav,
   sidebarNavItem,
+  sidebarNavItemActive,
 } from "@design-system";
 
 const navItems = [
@@ -67,8 +69,14 @@ const Item = ({
   href: string;
   icon: ElementType;
 }) => {
+  const location = useLocation();
+  const isActive = location.pathname === href;
+
   return (
-    <a href={href} className={sidebarNavItem}>
+    <a
+      href={href}
+      className={`${sidebarNavItem} ${isActive ? sidebarNavItemActive : ""}`}
+    >
       <Icon icon={icon} size="sm" ariaLabel={label} />
       <span className="hidden lg:inline">{label}</span>
     </a>

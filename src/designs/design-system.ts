@@ -13,7 +13,9 @@ export const sidebarLogo = "mb-8 flex items-center justify-center";
 export const sidebarLogoImage = "w-full object-contain";
 export const sidebarNav = "space-y-2";
 export const sidebarNavItem =
-  "flex items-center justify-center lg:justify-start gap-3 rounded-3xl px-2 lg:px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-[#83b6fc] transition hover:text-white";
+  "flex items-center justify-center lg:justify-start gap-3 rounded-3xl px-2 lg:px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-[#83b6fc] hover:text-white";
+export const sidebarNavItemActive =
+  "bg-[#83b6fc] text-white hover:bg-[#6ba5f5]";
 export const contentShell =
   "flex-1 ml-20 lg:ml-48 bg-[#f7f8ff] px-4 lg:px-6 pt-18 pb-6 min-h-screen";
 export const panel =
