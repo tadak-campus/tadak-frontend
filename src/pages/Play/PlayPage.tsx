@@ -165,34 +165,18 @@ const PlayPage = () => {
         <StatCard
           label="정확도"
           value={`${accuracy}%`}
-          bgColor="#e8f5ec"
-          borderColor="#c8e6d0"
-          labelColor="#2d8659"
-          valueColor="#1e6b42"
+          variant="green"
         />
         <StatCard
           label="CPM"
           value={isFinished ? finalCPM : currentCPM}
-          bgColor="#e8eeff"
-          borderColor="#c8d4f0"
-          labelColor="#3b5bc4"
-          valueColor="#2a4399"
+          variant="blue"
         />
-        <StatCard
-          label="오타"
-          value={errorCount}
-          bgColor="#fce8e8"
-          borderColor="#f5cccc"
-          labelColor="#c44545"
-          valueColor="#a02828"
-        />
+        <StatCard label="오타" value={errorCount} variant="red" />
         <StatCard
           label="지난 시간(s)"
           value={elapsedSeconds}
-          bgColor="#f0ebf7"
-          borderColor="#dcd0ec"
-          labelColor="#8b5cb8"
-          valueColor="#6b3a99"
+          variant="purple"
         />
       </div>
 

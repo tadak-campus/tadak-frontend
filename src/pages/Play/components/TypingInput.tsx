@@ -15,7 +15,7 @@ const TypingInput = forwardRef<HTMLInputElement, TypingInputProps>(
         value={value}
         onChange={onChange}
         onKeyDown={onKeyDown}
-        className="w-full px-4 py-3 border-3 border-[#7CB9E8] rounded-xl text-2xl leading-relaxed mb-6 focus:outline-none"
+        className="w-full px-4 py-3 border-3 border-sky-300 rounded-xl text-2xl leading-relaxed mb-6 focus:outline-none"
       />
     );
   },
