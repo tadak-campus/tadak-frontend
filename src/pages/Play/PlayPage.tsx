@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import Keyboard from "../../components/Keyboard/Keyboard";
+import { qwertyLayout } from "../../components/Keyboard/KeyboardLayout";
+import useKeyboardInput from "../../components/Keyboard/useKeyboardInput";
 import StatCard from "./components/StatCard";
 import SentenceDisplay from "./components/SentenceDisplay";
 import UpcomingSentences from "./components/UpcomingSentences";
@@ -13,8 +16,7 @@ const SENTENCES = [
 const PlayPage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [typed, setTyped] = useState("");
-  const [, setPressedCodes] = useState<Set<string>>(new Set());
-  const [, setShiftActive] = useState(false);
+  const { pressedCodes, shiftActive } = useKeyboardInput();
 
   // 통계 관련 state
   const [accuracy, setAccuracy] = useState(100);
@@ -37,32 +39,6 @@ const PlayPage = () => {
   const typedRef = useRef("");
   const currentSentenceRef = useRef(currentSentence);
   const pastErrorsRef = useRef(0);
-
-  /**
-   * @todo 추후 키보드 훅으로 분리
-   */
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      setPressedCodes((prev) => new Set(prev).add(e.code));
-      if (e.key === "Shift") setShiftActive(true);
-    };
-
-    const handleKeyUp = (e: KeyboardEvent) => {
-      setPressedCodes((prev) => {
-        const next = new Set(prev);
-        next.delete(e.code);
-        return next;
-      });
-      if (e.key === "Shift") setShiftActive(false);
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
-    };
-  }, []);
 
   // 페이지 열리면 input에 자동 포커스
   useEffect(() => {
@@ -236,7 +212,11 @@ const PlayPage = () => {
         <UpcomingSentences sentences={remainingSentences} />
       </div>
 
-      <div>키보드 레이아웃</div>
+      <Keyboard
+        layout={qwertyLayout}
+        pressedCodes={pressedCodes}
+        shiftActive={shiftActive}
+      />
     </main>
   );
 };
