@@ -180,7 +180,7 @@ const PlayPage = () => {
         />
       </div>
 
-      <div className="p-6 rounded-xl border mb-8">
+      <div className="p-6 rounded-xl shadow-md mb-8">
         {/* 현재 문장 */}
         <SentenceDisplay sentence={currentSentence} typed={typed} />
 
