@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
+import KeyboardPreview from "../pages/dev/KeyboardPreview";
 
 const AppRoutes = () =>
   createBrowserRouter([
@@ -33,6 +34,9 @@ const AppRoutes = () =>
         },
       ],
     },
+    ...(import.meta.env.DEV
+      ? [{ path: "/dev/keyboard", element: <KeyboardPreview /> }]
+      : []),
   ]);
 
 export default AppRoutes;
