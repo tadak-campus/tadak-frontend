@@ -1,15 +1,11 @@
-import Header from "./Header";
-import Sidebar from "./Sidebar";
-import Container from "./Container";
+import { Header, Sidebar, Container } from "./components";
 
 const MainLayout = () => {
   return (
     <div className="w-full h-screen flex flex-col">
       <Header />
-      <div className="w-full h-full flex">
-        <Sidebar />
-        <Container />
-      </div>
+      <Sidebar />
+      <Container />
     </div>
   );
 };

@@ -1,9 +1,14 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
     "paths": {
+      "@assets/*": ["./src/assets/*"],
+      "@components/*": ["./src/components/*"],
       "@layouts/*": ["./src/layouts/*"],
-      "@routes/*": ["./src/routes/*"]
+      "@routes/*": ["./src/routes/*"],
+      "@designs/*": ["./src/designs/*"],
+      "@design-system": ["./src/designs/design-system"]
     }
   }
 }

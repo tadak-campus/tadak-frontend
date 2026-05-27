@@ -1,10 +1,11 @@
 import { Outlet } from "react-router-dom";
+import { contentShell } from "@design-system";
 
 const Container = () => {
   return (
-    <div className="w-full h-screen flex flex-col">
+    <main className={contentShell}>
       <Outlet />
-    </div>
+    </main>
   );
 };
 
