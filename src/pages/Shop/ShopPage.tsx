@@ -34,33 +34,48 @@ const ShopPage = () => {
     setPreviewByType((prev) => ({ ...prev, [item.type]: item.id }));
 
   return (
-    <main className="flex-1 p-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">상점</h1>
-      </div>
+    <main className="flex min-h-[calc(100vh-6rem)] flex-col p-8">
+      <div className="flex flex-1 flex-col gap-6 lg:flex-row lg:items-stretch">
+        {/* 좌측: 상점 아이템 목록 카드 */}
+        <section className="flex flex-col rounded-2xl bg-white p-5 shadow-md lg:w-110 lg:shrink-0">
+          <h2 className="mb-4 text-2xl font-bold">상점</h2>
+          <div className="mb-4">
+            <CategoryTabs active={activeTab} onChange={setActiveTab} />
+          </div>
+          <div className="flex-1 overflow-y-auto">
+            <ItemGrid
+              items={itemsForTab}
+              selectedId={previewByType[activeTab]}
+              onSelect={handleSelect}
+            />
+          </div>
+        </section>
 
-      {/* 상단: 키보드 미리보기 */}
-      <div className="mb-8 rounded-2xl bg-white p-4 shadow-md">
-        <KeyboardStage
-          layout={qwertyLayout}
-          pressedCodes={pressedCodes}
-          shiftActive={shiftActive}
-          background={background}
-          decorations={decorations}
-          soundLabel={soundLabel}
-          keycapSkin={keycapSkin}
-        />
+        {/* 우측: 키보드 꾸미기 카드 (미리보기 + 저장 버튼 위아래 배치) */}
+        <section className="flex flex-1 flex-col rounded-2xl bg-white p-5 shadow-md">
+          <h2 className="mb-4 text-2xl font-bold">키보드 꾸미기</h2>
+          <div className="flex flex-1 flex-col justify-center">
+            <KeyboardStage
+              layout={qwertyLayout}
+              pressedCodes={pressedCodes}
+              shiftActive={shiftActive}
+              background={background}
+              decorations={decorations}
+              soundLabel={soundLabel}
+              keycapSkin={keycapSkin}
+            />
+          </div>
+          <div className="mt-4 flex justify-end">
+            {/* TODO: 아이템 착용 상태 저장 (백엔드 연동) */}
+            <button
+              type="button"
+              className="rounded-xl bg-sky-400 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-300"
+            >
+              내 키보드 저장하기
+            </button>
+          </div>
+        </section>
       </div>
-
-      {/* 하단: 탭 + 아이템 그리드 */}
-      <div className="mb-4">
-        <CategoryTabs active={activeTab} onChange={setActiveTab} />
-      </div>
-      <ItemGrid
-        items={itemsForTab}
-        selectedId={previewByType[activeTab]}
-        onSelect={handleSelect}
-      />
     </main>
   );
 };
