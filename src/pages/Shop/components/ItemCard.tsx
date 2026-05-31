@@ -68,8 +68,8 @@ const ItemCard = ({ item, selected, onSelect }: Props) => {
     <button
       type="button"
       onClick={() => onSelect(item)}
-      className={`relative flex flex-col rounded-2xl border bg-white p-3 text-left transition ${
-        selected ? "border-sky-400 border-2" : "border-slate-200"
+      className={`relative flex flex-col rounded-2xl bg-white p-3 text-left transition ${
+        selected ? "border-2 border-sky-400" : "border border-slate-200"
       }`}
     >
       {item.is_equipped && (
@@ -94,7 +94,7 @@ const ItemCard = ({ item, selected, onSelect }: Props) => {
 
       <span
         onClick={handleAction}
-        className="mt-2 rounded-lg bg-slate-100 py-1 text-center text-xs font-semibold text-slate-700"
+        className="mt-2 block w-full rounded-lg bg-slate-100 py-1 text-center text-xs font-semibold text-slate-700"
       >
         {buttonLabel}
       </span>
