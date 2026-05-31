@@ -59,11 +59,6 @@ const ItemCard = ({ item, selected, onSelect }: Props) => {
       ? "착용"
       : "구매";
 
-  const handleAction = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    // TODO: 백엔드 연동 (구매/착용/착용 해제)
-  };
-
   return (
     <button
       type="button"
@@ -92,10 +87,8 @@ const ItemCard = ({ item, selected, onSelect }: Props) => {
         {item.is_owned ? "보유함" : `💰 ${item.price}`}
       </div>
 
-      <span
-        onClick={handleAction}
-        className="mt-2 block w-full rounded-lg bg-slate-100 py-1 text-center text-xs font-semibold text-slate-700"
-      >
+      {/* 구매/착용 액션은 백엔드 연동 시 구현 예정 (현재는 라벨 표시만) */}
+      <span className="mt-2 block w-full rounded-lg bg-slate-100 py-1 text-center text-xs font-semibold text-slate-700">
         {buttonLabel}
       </span>
     </button>
