@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import MainLayout from '@layouts/MainLayout';
 import PlayPage from '@pages/Play/PlayPage';
+import ShopPage from '@pages/Shop/ShopPage';
 import KeyboardPreview from '@pages/dev/KeyboardPreview';
 
 const AppRoutes = () =>
@@ -31,7 +32,7 @@ const AppRoutes = () =>
         },
         {
           path: '/shop',
-          element: <div>Shop</div>,
+          element: <ShopPage />,
         },
       ],
     },
