@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import Keyboard from "../../components/Keyboard/Keyboard";
-import { qwertyLayout } from "../../components/Keyboard/KeyboardLayout";
-import useKeyboardInput from "../../components/Keyboard/useKeyboardInput";
+import Keyboard from "@components/Keyboard/Keyboard";
+import { qwertyLayout } from "@components/Keyboard/KeyboardLayout";
+import useKeyboardInput from "@components/Keyboard/useKeyboardInput";
 import StatCard from "./components/StatCard";
 import SentenceDisplay from "./components/SentenceDisplay";
 import UpcomingSentences from "./components/UpcomingSentences";

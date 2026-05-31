@@ -6,6 +6,7 @@
       "@assets/*": ["./src/assets/*"],
       "@components/*": ["./src/components/*"],
       "@layouts/*": ["./src/layouts/*"],
+      "@pages/*": ["./src/pages/*"],
       "@routes/*": ["./src/routes/*"],
       "@designs/*": ["./src/designs/*"],
       "@design-system": ["./src/designs/design-system"]
