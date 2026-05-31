@@ -1,23 +1,43 @@
 import type { KeyboardLayout } from "./KeyboardLayout";
+import { defaultKeycapSkin, type KeycapSkin } from "./cosmetics";
 
 type Props = {
   layout: KeyboardLayout;
   pressedCodes: Set<string>;
   shiftActive: boolean;
+  keycapSkin?: KeycapSkin;
 };
 
-const Keyboard = ({ layout, pressedCodes, shiftActive }: Props) => {
+const Keyboard = ({
+  layout,
+  pressedCodes,
+  shiftActive,
+  keycapSkin = defaultKeycapSkin,
+}: Props) => {
   return (
-    <div className="flex flex-col gap-2 p-6 select-none rounded-xl bg-white shadow-md">
+    <div
+      className="flex flex-col gap-2 p-6 select-none rounded-xl shadow-md"
+      style={{ backgroundColor: keycapSkin.plate }}
+    >
       {layout.rows.map((row, i) => (
         <div key={i} className="flex gap-1.5">
           {row.map((key) => {
             const isPressed = pressedCodes.has(key.code);
             const baseClasses =
-              "min-w-[40px] h-[52px] flex items-center justify-center rounded-md text-sm shadow-md border border-blue-50 translate-y-[2px] transition-[background-color,transform,border-color] duration-[80ms] ease";
-            const stateClasses = isPressed
-              ? "bg-sky-400 border-sky-300 border-b text-white"
-              : "border-b-2 text-black";
+              "min-w-[40px] h-[52px] flex items-center justify-center rounded-md text-sm shadow-md border border-solid translate-y-[2px] transition-[background-color,transform,border-color] duration-[80ms] ease";
+            const colorStyle = isPressed
+              ? {
+                  backgroundColor: keycapSkin.pressed,
+                  borderColor: keycapSkin.pressedBorder,
+                  color: keycapSkin.pressedText,
+                  borderBottomWidth: "1px",
+                }
+              : {
+                  backgroundColor: keycapSkin.base,
+                  borderColor: keycapSkin.border,
+                  color: keycapSkin.text,
+                  borderBottomWidth: "2px",
+                };
             const displayText =
               shiftActive && key.shiftLabel ? key.shiftLabel : key.label;
             return (
@@ -25,8 +45,9 @@ const Keyboard = ({ layout, pressedCodes, shiftActive }: Props) => {
                 key={key.code}
                 style={{
                   flex: `${key.width ?? 1} 1 0`,
+                  ...colorStyle,
                 }}
-                className={`${baseClasses} ${stateClasses}`}
+                className={baseClasses}
               >
                 <span className="pointer-events-none">{displayText}</span>
               </div>
