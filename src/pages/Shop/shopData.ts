@@ -1,4 +1,8 @@
-import type { ItemSkin, ShopItemType } from "@components/Keyboard/cosmetics";
+import {
+  defaultKeycapSkin,
+  type ItemSkin,
+  type ShopItemType,
+} from "@components/Keyboard/cosmetics";
 
 // 백엔드 응답 형태 + 미리보기 스킨(목업)
 export type ShopItem = {
@@ -16,6 +20,18 @@ export type ShopItem = {
 
 export const SHOP_ITEMS: ShopItem[] = [
   // 배경
+  {
+    id: 0,
+    name: "기본",
+    type: "BACKGROUND",
+    price: 0,
+    thumbnail_url: "",
+    asset_url: "",
+    is_owned: true,
+    is_equipped: false,
+    sound_files: [],
+    skin: { kind: "BACKGROUND", background: "transparent" },
+  },
   {
     id: 1,
     name: "네온",
@@ -66,6 +82,18 @@ export const SHOP_ITEMS: ShopItem[] = [
   },
   // 키캡
   {
+    id: 10,
+    name: "기본",
+    type: "KEYCAP",
+    price: 0,
+    thumbnail_url: "",
+    asset_url: "",
+    is_owned: true,
+    is_equipped: true,
+    sound_files: [],
+    skin: { kind: "KEYCAP", keycap: defaultKeycapSkin },
+  },
+  {
     id: 11,
     name: "민트",
     type: "KEYCAP",
@@ -113,6 +141,18 @@ export const SHOP_ITEMS: ShopItem[] = [
   },
   // 효과음 (라벨만 표시)
   {
+    id: 20,
+    name: "기본",
+    type: "SOUND",
+    price: 0,
+    thumbnail_url: "",
+    asset_url: "",
+    is_owned: true,
+    is_equipped: true,
+    sound_files: [],
+    skin: { kind: "SOUND", label: "기본" },
+  },
+  {
     id: 21,
     name: "청축",
     type: "SOUND",
@@ -137,6 +177,18 @@ export const SHOP_ITEMS: ShopItem[] = [
     skin: { kind: "SOUND", label: "적축" },
   },
   // 장식
+  {
+    id: 30,
+    name: "기본",
+    type: "DECORATION",
+    price: 0,
+    thumbnail_url: "",
+    asset_url: "",
+    is_owned: true,
+    is_equipped: true,
+    sound_files: [],
+    skin: { kind: "DECORATION", decorations: [] },
+  },
   {
     id: 31,
     name: "식물",
