@@ -1,4 +1,5 @@
-export type ShopItemType = "BACKGROUND" | "KEYCAP" | "SOUND" | "DECORATION";
+// 상점 아이템 종류. API의 equipped_items 슬롯 키(keyboard/background/sound/decoration)와 1:1 매핑.
+export type ShopItemType = "KEYBOARD" | "BACKGROUND" | "SOUND" | "DECORATION";
 
 export type KeycapSkin = {
   plate: string; // 키보드 판(plate) 배경
@@ -9,24 +10,6 @@ export type KeycapSkin = {
   pressedBorder: string; // 눌림 테두리
   pressedText: string; // 눌림 글자색
 };
-
-export type DecorationPosition =
-  | "top-left"
-  | "top-right"
-  | "bottom-left"
-  | "bottom-right";
-
-export type Decoration = {
-  emoji: string;
-  position: DecorationPosition;
-};
-
-// 아이템 종류별 미리보기 스킨(목업: 실제 에셋 대신 CSS로 표현)
-export type ItemSkin =
-  | { kind: "BACKGROUND"; background: string }
-  | { kind: "KEYCAP"; keycap: KeycapSkin }
-  | { kind: "DECORATION"; decorations: Decoration[] }
-  | { kind: "SOUND"; label: string };
 
 // 현행 Keyboard 모습을 그대로 재현하는 기본 키캡 스킨.
 // hex 대신 @theme 토큰(var(--color-*))을 참조해 토큰을 단일 출처로 유지한다.

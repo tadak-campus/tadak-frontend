@@ -1,46 +1,43 @@
 import Keyboard from "./Keyboard";
 import type { KeyboardLayout } from "./KeyboardLayout";
-import type { Decoration, DecorationPosition, KeycapSkin } from "./cosmetics";
+import type { KeycapSkin } from "./cosmetics";
 
 type Props = {
   layout: KeyboardLayout;
   pressedCodes: Set<string>;
   shiftActive: boolean;
-  background?: string; // CSS background 값
-  decorations?: Decoration[];
+  backgroundImageUrl?: string; // 배경 에셋(asset_url) — 스테이지 전체 배경 이미지
+  decorationImageUrl?: string; // 장식 에셋(asset_url) — 키보드 위 투명 오버레이
   soundLabel?: string;
   keycapSkin?: KeycapSkin;
-};
-
-const POSITION_CLASS: Record<DecorationPosition, string> = {
-  "top-left": "top-3 left-3",
-  "top-right": "top-3 right-3",
-  "bottom-left": "bottom-3 left-3",
-  "bottom-right": "bottom-3 right-3",
 };
 
 const KeyboardStage = ({
   layout,
   pressedCodes,
   shiftActive,
-  background,
-  decorations = [],
+  backgroundImageUrl,
+  decorationImageUrl,
   soundLabel,
   keycapSkin,
 }: Props) => {
   return (
     <div
-      className="relative overflow-hidden rounded-2xl p-8 flex justify-center"
-      style={background ? { background } : undefined}
+      className="relative flex justify-center overflow-hidden rounded-2xl bg-slate-50 bg-cover bg-center p-8"
+      style={
+        backgroundImageUrl
+          ? { backgroundImage: `url("${backgroundImageUrl}")` }
+          : undefined
+      }
     >
-      {decorations.map((deco, i) => (
-        <span
-          key={i}
-          className={`pointer-events-none absolute text-2xl ${POSITION_CLASS[deco.position]}`}
-        >
-          {deco.emoji}
-        </span>
-      ))}
+      {decorationImageUrl && (
+        <img
+          src={decorationImageUrl}
+          alt=""
+          aria-hidden
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+        />
+      )}
 
       {soundLabel && (
         <span className="pointer-events-none absolute bottom-3 right-3 rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-slate-700">
@@ -48,7 +45,7 @@ const KeyboardStage = ({
         </span>
       )}
 
-      <div className="w-full max-w-[760px]">
+      <div className="relative w-full max-w-190">
         <Keyboard
           layout={layout}
           pressedCodes={pressedCodes}
