@@ -1,11 +1,16 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import MainLayout from '@layouts/MainLayout';
+import LoginPage from '@pages/LoginPage';
 import PlayPage from '@pages/Play/PlayPage';
 import ShopPage from '@pages/Shop/ShopPage';
 import KeyboardPreview from '@pages/dev/KeyboardPreview';
 
 const AppRoutes = () =>
   createBrowserRouter([
+    {
+      path: '/login',
+      element: <LoginPage />,
+    },
     {
       path: '/',
       element: <MainLayout />,
@@ -17,10 +22,6 @@ const AppRoutes = () =>
         {
           path: '/home',
           element: <div>Home</div>,
-        },
-        {
-          path: '/login',
-          element: <div>Login</div>,
         },
         {
           path: '/play',
