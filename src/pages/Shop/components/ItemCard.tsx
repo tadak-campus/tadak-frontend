@@ -1,4 +1,4 @@
-import type { ShopItem } from "../shopData";
+import type { ShopItem } from "@pages/Shop/shopData";
 
 type Props = {
   item: ShopItem;

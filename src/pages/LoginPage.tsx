@@ -1,19 +1,10 @@
-import { useNavigate } from "react-router-dom";
 import logo from "@assets/lg_small.png";
 import kakaoLoginButton from "@assets/login/kakao_login_medium_narrow.png";
 import skyBackground from "@assets/login/sky-background.png";
+import { useKakaoLogin } from "@hooks/useKakaoLogin";
 
 const LoginPage = () => {
-  const navigate = useNavigate();
-
-  const handleKakaoLogin = () => {
-    if (import.meta.env.DEV) {
-      navigate("/");
-      return;
-    }
-
-    alert("카카오 로그인 기능은 추후 연동 예정입니다.");
-  };
+  const { isLoggingIn, startKakaoLogin } = useKakaoLogin();
 
   return (
     <main
@@ -36,9 +27,11 @@ const LoginPage = () => {
 
         <button
           type="button"
-          onClick={handleKakaoLogin}
-          className="mx-auto mt-12 block w-full max-w-[183px] rounded-md transition hover:brightness-[0.98] focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-sky-400 active:translate-y-0.5"
+          onClick={startKakaoLogin}
+          disabled={isLoggingIn}
+          className="mx-auto mt-12 block w-full max-w-[183px] rounded-md transition hover:brightness-[0.98] focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-sky-400 active:translate-y-0.5 disabled:cursor-wait disabled:opacity-70"
           aria-label="카카오로 시작하기"
+          aria-busy={isLoggingIn}
         >
           <img
             src={kakaoLoginButton}

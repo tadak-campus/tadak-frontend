@@ -12,6 +12,10 @@ const AppRoutes = () =>
       element: <LoginPage />,
     },
     {
+      path: '/auth/kakao/callback',
+      element: <LoginPage />,
+    },
+    {
       path: '/',
       element: <MainLayout />,
       children: [

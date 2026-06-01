@@ -3,9 +3,9 @@ import KeyboardStage from "@components/Keyboard/KeyboardStage";
 import { qwertyLayout } from "@components/Keyboard/KeyboardLayout";
 import useKeyboardInput from "@components/Keyboard/useKeyboardInput";
 import type { ShopItemType } from "@components/Keyboard/cosmetics";
-import { SHOP_ITEMS, type ShopItem } from "./shopData";
-import CategoryTabs from "./components/CategoryTabs";
-import ItemGrid from "./components/ItemGrid";
+import { SHOP_ITEMS, type ShopItem } from "@pages/Shop/shopData";
+import CategoryTabs from "@pages/Shop/components/CategoryTabs";
+import ItemGrid from "@pages/Shop/components/ItemGrid";
 
 const ShopPage = () => {
   const { pressedCodes, shiftActive } = useKeyboardInput();
