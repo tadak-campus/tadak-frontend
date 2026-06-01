@@ -7,7 +7,7 @@ type Props = {
 
 const TABS: { type: ShopItemType; label: string }[] = [
   { type: "BACKGROUND", label: "배경" },
-  { type: "KEYCAP", label: "키캡" },
+  { type: "KEYBOARD", label: "키보드" },
   { type: "SOUND", label: "효과음" },
   { type: "DECORATION", label: "장식" },
 ];

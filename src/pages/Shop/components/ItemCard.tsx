@@ -1,4 +1,5 @@
-import type { ShopItem } from "@pages/Shop/shopData";
+import { KEYCAP_SKINS, type ShopItem } from "@pages/Shop/shopData";
+import { defaultKeycapSkin } from "@components/Keyboard/cosmetics";
 
 type Props = {
   item: ShopItem;
@@ -6,48 +7,49 @@ type Props = {
   onSelect: (item: ShopItem) => void;
 };
 
-// 스킨 종류별 썸네일 미리보기
+// 아이템 종류별 썸네일 미리보기
 const Thumbnail = ({ item }: { item: ShopItem }) => {
-  const skin = item.skin;
-  if (skin.kind === "BACKGROUND") {
+  // 배경·장식: 이미지 에셋(thumbnail_url) 표시. 없으면(기본 아이템) 중립 플레이스홀더.
+  if (item.type === "BACKGROUND" || item.type === "DECORATION") {
+    if (!item.thumbnail_url) {
+      return (
+        <div className="flex h-16 items-center justify-center rounded-lg bg-slate-100 text-xs font-semibold text-slate-400">
+          기본
+        </div>
+      );
+    }
     return (
-      <div
-        className="h-16 rounded-lg"
-        style={{ background: skin.background }}
+      <img
+        src={item.thumbnail_url}
+        alt={item.name}
+        className="h-16 w-full rounded-lg object-cover"
       />
     );
   }
-  if (skin.kind === "KEYCAP") {
+
+  // 키보드(키캡): CSS 색 스킨 미리보기 (목업 — KEYCAP_SKINS)
+  if (item.type === "KEYBOARD") {
+    const keycap = KEYCAP_SKINS[item.id] ?? defaultKeycapSkin;
     return (
       <div
         className="flex h-16 items-center justify-center gap-1 rounded-lg"
-        style={{ background: skin.keycap.plate }}
+        style={{ background: keycap.plate }}
       >
-        {[skin.keycap.base, skin.keycap.pressed, skin.keycap.base].map(
-          (c, i) => (
-            <span
-              key={i}
-              className="h-6 w-5 rounded"
-              style={{ backgroundColor: c, border: `1px solid ${skin.keycap.border}` }}
-            />
-          ),
-        )}
-      </div>
-    );
-  }
-  if (skin.kind === "DECORATION") {
-    return (
-      <div className="flex h-16 items-center justify-center gap-2 rounded-lg bg-slate-100 text-2xl">
-        {skin.decorations.map((d, i) => (
-          <span key={i}>{d.emoji}</span>
+        {[keycap.base, keycap.pressed, keycap.base].map((c, i) => (
+          <span
+            key={i}
+            className="h-6 w-5 rounded"
+            style={{ backgroundColor: c, border: `1px solid ${keycap.border}` }}
+          />
         ))}
       </div>
     );
   }
-  // SOUND
+
+  // SOUND: 라벨 표시 (재생 없음)
   return (
     <div className="flex h-16 items-center justify-center rounded-lg bg-slate-100 text-sm font-semibold text-slate-600">
-      ♪ {skin.label}
+      ♪ {item.name}
     </div>
   );
 };
@@ -87,7 +89,8 @@ const ItemCard = ({ item, selected, onSelect }: Props) => {
         {item.is_owned ? "보유함" : `💰 ${item.price}`}
       </div>
 
-      {/* 구매/착용 액션은 백엔드 연동 시 구현 예정 (현재는 라벨 표시만) */}
+      {/* TODO: 백엔드 연동 — 구매 POST /api/shop/items/{id}/buy,
+          착용/해제 POST /api/shop/items/{id}/equip (현재는 라벨 표시만) */}
       <span className="mt-2 block w-full rounded-lg bg-slate-100 py-1 text-center text-xs font-semibold text-slate-700">
         {buttonLabel}
       </span>
