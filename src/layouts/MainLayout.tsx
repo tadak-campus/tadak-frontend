@@ -1,4 +1,4 @@
-import { Header, Sidebar, Container } from "./components";
+import { Header, Sidebar, Container } from "@layouts/components";
 
 const MainLayout = () => {
   return (

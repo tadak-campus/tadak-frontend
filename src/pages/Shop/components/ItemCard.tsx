@@ -1,5 +1,5 @@
+import { KEYCAP_SKINS, type ShopItem } from "@pages/Shop/shopData";
 import { defaultKeycapSkin } from "@components/Keyboard/cosmetics";
-import { KEYCAP_SKINS, type ShopItem } from "../shopData";
 
 type Props = {
   item: ShopItem;

@@ -9,9 +9,9 @@ import {
   SLOT_TO_TYPE,
   type EquippedSlot,
   type ShopItem,
-} from "./shopData";
-import CategoryTabs from "./components/CategoryTabs";
-import ItemGrid from "./components/ItemGrid";
+} from "@pages/Shop/shopData";
+import CategoryTabs from "@pages/Shop/components/CategoryTabs";
+import ItemGrid from "@pages/Shop/components/ItemGrid";
 
 // TODO: GET /api/shop/summary 응답으로 교체 (현재는 목업 상수)
 const summary = SHOP_SUMMARY;

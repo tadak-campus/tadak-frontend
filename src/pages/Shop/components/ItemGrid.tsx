@@ -1,5 +1,5 @@
-import type { ShopItem } from "../shopData";
-import ItemCard from "./ItemCard";
+import type { ShopItem } from "@pages/Shop/shopData";
+import ItemCard from "@pages/Shop/components/ItemCard";
 
 type Props = {
   items: ShopItem[];

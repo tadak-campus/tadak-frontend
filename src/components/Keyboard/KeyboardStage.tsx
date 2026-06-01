@@ -1,6 +1,6 @@
-import Keyboard from "./Keyboard";
-import type { KeyboardLayout } from "./KeyboardLayout";
-import type { KeycapSkin } from "./cosmetics";
+import Keyboard from "@components/Keyboard/Keyboard";
+import type { KeyboardLayout } from "@components/Keyboard/KeyboardLayout";
+import type { KeycapSkin } from "@components/Keyboard/cosmetics";
 
 type Props = {
   layout: KeyboardLayout;

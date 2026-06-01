@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import Keyboard from "@components/Keyboard/Keyboard";
 import { qwertyLayout } from "@components/Keyboard/KeyboardLayout";
 import useKeyboardInput from "@components/Keyboard/useKeyboardInput";
-import StatCard from "./components/StatCard";
-import SentenceDisplay from "./components/SentenceDisplay";
-import UpcomingSentences from "./components/UpcomingSentences";
-import TypingInput from "./components/TypingInput";
+import StatCard from "@pages/Play/components/StatCard";
+import SentenceDisplay from "@pages/Play/components/SentenceDisplay";
+import UpcomingSentences from "@pages/Play/components/UpcomingSentences";
+import TypingInput from "@pages/Play/components/TypingInput";
 
 const SENTENCES = [
   "클라우드 컴퓨팅은 인터넷을 통해 필요한 만큼 컴퓨팅 자원을 제공하는 방식이다.",
