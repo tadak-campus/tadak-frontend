@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360">
+  <!-- 임시 플레이스홀더: 투명 배경 위 모서리 장식. 실제 장식 에셋으로 교체 예정 -->
+  <text x="32" y="56" font-size="44" text-anchor="middle">🌿</text>
+  <text x="608" y="56" font-size="44" text-anchor="middle">🪴</text>
+  <text x="32" y="336" font-size="40" text-anchor="middle">🌱</text>
+</svg>
