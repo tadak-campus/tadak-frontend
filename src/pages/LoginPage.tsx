@@ -1,9 +1,17 @@
+import { useNavigate } from "react-router-dom";
 import logo from "@assets/lg_small.png";
 import kakaoLoginButton from "@assets/login/kakao_login_medium_narrow.png";
 import skyBackground from "@assets/login/sky-background.png";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+
   const handleKakaoLogin = () => {
+    if (import.meta.env.DEV) {
+      navigate("/");
+      return;
+    }
+
     alert("카카오 로그인 기능은 추후 연동 예정입니다.");
   };
 
