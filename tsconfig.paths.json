@@ -3,12 +3,17 @@
     "baseUrl": ".",
     "ignoreDeprecations": "6.0",
     "paths": {
+      "@/*": ["./src/*"],
+      "@apis/*": ["./src/apis/*"],
       "@assets/*": ["./src/assets/*"],
       "@components/*": ["./src/components/*"],
+      "@hooks/*": ["./src/hooks/*"],
       "@layouts/*": ["./src/layouts/*"],
       "@pages/*": ["./src/pages/*"],
       "@routes/*": ["./src/routes/*"],
       "@designs/*": ["./src/designs/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@app-types/*": ["./src/types/*"],
       "@design-system": ["./src/designs/design-system"]
     }
   }
