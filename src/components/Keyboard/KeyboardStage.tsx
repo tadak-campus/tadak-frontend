@@ -35,7 +35,7 @@ const KeyboardStage = ({
           src={decorationImageUrl}
           alt=""
           aria-hidden
-          className="pointer-events-none absolute inset-0 h-full w-full object-contain"
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover"
         />
       )}
 
