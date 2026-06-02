@@ -67,7 +67,7 @@ const Thumbnail = ({ item }: { item: ShopItem }) => {
 const ItemCard = ({ item, selected, onSelect, onBuy, busy }: Props) => {
   return (
     <div
-      className={`relative flex flex-col rounded-2xl bg-white p-3 text-left transition ${
+      className={`relative flex flex-col items-center rounded-2xl bg-white p-3 text-center transition ${
         selected ? "border-2 border-sky-400" : "border border-slate-200"
       }`}
     >
@@ -86,14 +86,14 @@ const ItemCard = ({ item, selected, onSelect, onBuy, busy }: Props) => {
       <button
         type="button"
         onClick={() => onSelect(item)}
-        className="flex flex-col text-left"
+        className="flex w-full flex-col items-center text-center"
       >
         <Thumbnail item={item} />
         <div className="mt-2 text-sm font-semibold text-slate-900">
           {item.name}
         </div>
         <div className="text-xs text-slate-500">
-          {item.is_owned ? "보유함" : `💰 ${item.price}`}
+          {item.is_owned ? "보유함" : `${item.price}P`}
         </div>
       </button>
 
@@ -107,9 +107,9 @@ const ItemCard = ({ item, selected, onSelect, onBuy, busy }: Props) => {
           type="button"
           onClick={() => onBuy(item)}
           disabled={busy}
-          className="mt-2 block w-full rounded-lg bg-amber-400 py-1 text-center text-xs font-semibold text-white transition hover:bg-amber-300 disabled:cursor-not-allowed disabled:opacity-60"
+          className="mt-2 block w-full rounded-lg text-blue-500 bg-sky-100 py-1 text-center text-xs font-semibold transition hover:bg-blue-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
         >
-          💰 {item.price} 구매
+          구매하기
         </button>
       )}
     </div>

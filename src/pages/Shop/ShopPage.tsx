@@ -32,8 +32,9 @@ const ShopPage = () => {
   const { summary, loading, error, saving, refetch, buy, save } = useShop();
 
   const [activeTab, setActiveTab] = useState<ShopItemType>("BACKGROUND");
-  const [previewByType, setPreviewByType] =
-    useState<Partial<Record<ShopItemType, number>>>({});
+  const [previewByType, setPreviewByType] = useState<
+    Partial<Record<ShopItemType, number>>
+  >({});
 
   // 요약을 처음 받아온 시점에만 착용 상태로 미리보기를 초기화한다(이후 사용자의 선택을 보존).
   const initializedRef = useRef(false);
@@ -55,7 +56,9 @@ const ShopPage = () => {
   if (error || !summary) {
     return (
       <main className="flex min-h-[calc(100vh-6rem)] flex-col items-center justify-center gap-4 p-8">
-        <p className="text-slate-600">{error ?? "상점 정보를 불러오지 못했습니다."}</p>
+        <p className="text-slate-600">
+          {error ?? "상점 정보를 불러오지 못했습니다."}
+        </p>
         <button
           type="button"
           onClick={() => void refetch()}
@@ -76,7 +79,8 @@ const ShopPage = () => {
   const sound = pick("SOUND");
 
   // 배경·장식은 이미지 에셋(asset_url), 키캡은 목업 색 스킨, 효과음은 라벨로 미리보기에 반영.
-  const backgroundImageUrl = resolveAssetUrl(bg?.asset_url ?? null) ?? undefined;
+  const backgroundImageUrl =
+    resolveAssetUrl(bg?.asset_url ?? null) ?? undefined;
   const decorationImageUrl =
     resolveAssetUrl(deco?.asset_url ?? null) ?? undefined;
   const keycapSkin = keyboard ? KEYCAP_SKINS[keyboard.id] : undefined;
@@ -91,7 +95,9 @@ const ShopPage = () => {
   const handleSave = () => {
     const targetIds = (Object.keys(previewByType) as ShopItemType[])
       .map((type) =>
-        summary.items.find((i) => i.type === type && i.id === previewByType[type]),
+        summary.items.find(
+          (i) => i.type === type && i.id === previewByType[type],
+        ),
       )
       .filter(
         (item): item is ShopItem =>
@@ -151,7 +157,7 @@ const ShopPage = () => {
               type="button"
               onClick={handleSave}
               disabled={saving}
-              className="rounded-xl bg-sky-400 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-300 disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-xl bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-60"
             >
               {saving ? "저장 중…" : "내 키보드 저장하기"}
             </button>
