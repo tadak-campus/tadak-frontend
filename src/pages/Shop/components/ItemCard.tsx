@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { resolveAssetUrl } from "@apis/assetUrl";
 import { KEYCAP_SKINS, type ShopItem } from "@pages/Shop/shopData";
 import { defaultKeycapSkin } from "@components/Keyboard/cosmetics";
 
@@ -5,29 +7,37 @@ type Props = {
   item: ShopItem;
   selected: boolean;
   onSelect: (item: ShopItem) => void;
+  onBuy: (item: ShopItem) => void;
+  busy?: boolean;
 };
+
+const Placeholder = ({ label }: { label: string }) => (
+  <div className="flex h-16 items-center justify-center rounded-lg bg-slate-100 text-xs font-semibold text-slate-400">
+    {label}
+  </div>
+);
 
 // 아이템 종류별 썸네일 미리보기
 const Thumbnail = ({ item }: { item: ShopItem }) => {
-  // 배경·장식: 이미지 에셋(thumbnail_url) 표시. 없으면(기본 아이템) 중립 플레이스홀더.
+  const [broken, setBroken] = useState(false);
+
+  // 배경·장식: 이미지 에셋(thumbnail_url) 표시. 없거나 로드 실패 시 중립 플레이스홀더.
   if (item.type === "BACKGROUND" || item.type === "DECORATION") {
-    if (!item.thumbnail_url) {
-      return (
-        <div className="flex h-16 items-center justify-center rounded-lg bg-slate-100 text-xs font-semibold text-slate-400">
-          기본
-        </div>
-      );
+    const src = resolveAssetUrl(item.thumbnail_url);
+    if (!src || broken) {
+      return <Placeholder label="기본" />;
     }
     return (
       <img
-        src={item.thumbnail_url}
+        src={src}
         alt={item.name}
+        onError={() => setBroken(true)}
         className="h-16 w-full rounded-lg object-cover"
       />
     );
   }
 
-  // 키보드(키캡): CSS 색 스킨 미리보기 (목업 — KEYCAP_SKINS)
+  // 키보드(키캡): CSS 색 스킨 미리보기 (목업 — KEYCAP_SKINS, 미등록 id는 기본 스킨).
   if (item.type === "KEYBOARD") {
     const keycap = KEYCAP_SKINS[item.id] ?? defaultKeycapSkin;
     return (
@@ -54,47 +64,55 @@ const Thumbnail = ({ item }: { item: ShopItem }) => {
   );
 };
 
-const ItemCard = ({ item, selected, onSelect }: Props) => {
-  const buttonLabel = item.is_equipped
-    ? "착용 해제"
-    : item.is_owned
-      ? "착용"
-      : "구매";
-
+const ItemCard = ({ item, selected, onSelect, onBuy, busy }: Props) => {
   return (
-    <button
-      type="button"
-      onClick={() => onSelect(item)}
+    <div
       className={`relative flex flex-col rounded-2xl bg-white p-3 text-left transition ${
         selected ? "border-2 border-sky-400" : "border border-slate-200"
       }`}
     >
       {item.is_equipped && (
-        <span className="absolute right-2 top-2 rounded-full bg-blue-600 px-2 py-0.5 text-[10px] font-semibold text-white">
+        <span className="absolute right-2 top-2 z-10 rounded-full bg-blue-600 px-2 py-0.5 text-[10px] font-semibold text-white">
           착용중
         </span>
       )}
       {!item.is_equipped && item.is_owned && (
-        <span className="absolute right-2 top-2 rounded-full bg-green-600 px-2 py-0.5 text-[10px] font-semibold text-white">
+        <span className="absolute right-2 top-2 z-10 rounded-full bg-green-600 px-2 py-0.5 text-[10px] font-semibold text-white">
           보유
         </span>
       )}
 
-      <Thumbnail item={item} />
+      {/* 카드 본문 클릭 = 미리보기 선택 */}
+      <button
+        type="button"
+        onClick={() => onSelect(item)}
+        className="flex flex-col text-left"
+      >
+        <Thumbnail item={item} />
+        <div className="mt-2 text-sm font-semibold text-slate-900">
+          {item.name}
+        </div>
+        <div className="text-xs text-slate-500">
+          {item.is_owned ? "보유함" : `💰 ${item.price}`}
+        </div>
+      </button>
 
-      <div className="mt-2 text-sm font-semibold text-slate-900">
-        {item.name}
-      </div>
-      <div className="text-xs text-slate-500">
-        {item.is_owned ? "보유함" : `💰 ${item.price}`}
-      </div>
-
-      {/* TODO: 백엔드 연동 — 구매 POST /api/shop/items/{id}/buy,
-          착용/해제 POST /api/shop/items/{id}/equip (현재는 라벨 표시만) */}
-      <span className="mt-2 block w-full rounded-lg bg-slate-100 py-1 text-center text-xs font-semibold text-slate-700">
-        {buttonLabel}
-      </span>
-    </button>
+      {/* 미보유 = 구매 버튼 / 보유·착용중 = 상태 표시 (착용은 '저장하기'로) */}
+      {item.is_owned ? (
+        <span className="mt-2 block w-full rounded-lg bg-slate-100 py-1 text-center text-xs font-semibold text-slate-500">
+          {item.is_equipped ? "착용중" : "보유"}
+        </span>
+      ) : (
+        <button
+          type="button"
+          onClick={() => onBuy(item)}
+          disabled={busy}
+          className="mt-2 block w-full rounded-lg bg-amber-400 py-1 text-center text-xs font-semibold text-white transition hover:bg-amber-300 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          💰 {item.price} 구매
+        </button>
+      )}
+    </div>
   );
 };
 
