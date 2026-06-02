@@ -68,20 +68,9 @@ const ItemCard = ({ item, selected, onSelect, onBuy, busy }: Props) => {
   return (
     <div
       className={`relative flex flex-col items-center rounded-2xl bg-white p-3 text-center transition ${
-        selected ? "border-2 border-sky-400" : "border border-slate-200"
+        selected ? "border-2 border-blue-500" : "border border-slate-200"
       }`}
     >
-      {item.is_equipped && (
-        <span className="absolute right-2 top-2 z-10 rounded-full bg-blue-600 px-2 py-0.5 text-[10px] font-semibold text-white">
-          착용중
-        </span>
-      )}
-      {!item.is_equipped && item.is_owned && (
-        <span className="absolute right-2 top-2 z-10 rounded-full bg-green-600 px-2 py-0.5 text-[10px] font-semibold text-white">
-          보유
-        </span>
-      )}
-
       {/* 카드 본문 클릭 = 미리보기 선택 */}
       <button
         type="button"
@@ -97,17 +86,21 @@ const ItemCard = ({ item, selected, onSelect, onBuy, busy }: Props) => {
         </div>
       </button>
 
-      {/* 미보유 = 구매 버튼 / 보유·착용중 = 상태 표시 (착용은 '저장하기'로) */}
-      {item.is_owned ? (
-        <span className="mt-2 block w-full rounded-lg bg-slate-100 py-1 text-center text-xs font-semibold text-slate-500">
-          {item.is_equipped ? "착용중" : "보유"}
+      {/* 착용중 = 적용중 / 보유·미착용 = 보유중 (착용은 '저장하기'로) / 미보유 = 구매 버튼 */}
+      {item.is_equipped ? (
+        <span className="mt-2 block w-full rounded-lg bg-green-100 py-1 text-center text-xs font-semibold text-green-700">
+          적용중
+        </span>
+      ) : item.is_owned ? (
+        <span className="mt-2 block w-full rounded-lg bg-blue-100 py-1 text-center text-xs font-semibold text-blue-700">
+          보유중
         </span>
       ) : (
         <button
           type="button"
           onClick={() => onBuy(item)}
           disabled={busy}
-          className="mt-2 block w-full rounded-lg text-blue-500 bg-sky-100 py-1 text-center text-xs font-semibold transition hover:bg-blue-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+          className="mt-2 block w-full rounded-lg bg-blue-500 py-1 text-center text-xs font-semibold text-white transition hover:bg-blue-400 disabled:cursor-not-allowed disabled:opacity-60"
         >
           구매하기
         </button>

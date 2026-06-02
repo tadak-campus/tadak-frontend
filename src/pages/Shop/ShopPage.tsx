@@ -91,18 +91,20 @@ const ShopPage = () => {
   const handleSelect = (item: ShopItem) =>
     setPreviewByType((prev) => ({ ...prev, [item.type]: item.id }));
 
+  // 미리보기로 고른 아이템(타입별)의 실제 객체 목록.
+  const previewedItems = (Object.keys(previewByType) as ShopItemType[])
+    .map((type) =>
+      summary.items.find((i) => i.type === type && i.id === previewByType[type]),
+    )
+    .filter((item): item is ShopItem => Boolean(item));
+
+  // 현재 착용중이 아닌 아이템이 선택되어 저장할 변경이 있는 상태.
+  const hasChanges = previewedItems.some((item) => !item.is_equipped);
+
   // 저장: 미리보기로 고른 항목 중 보유 중이고 아직 미착용인 것만 착용한다.
   const handleSave = () => {
-    const targetIds = (Object.keys(previewByType) as ShopItemType[])
-      .map((type) =>
-        summary.items.find(
-          (i) => i.type === type && i.id === previewByType[type],
-        ),
-      )
-      .filter(
-        (item): item is ShopItem =>
-          Boolean(item) && item!.is_owned && !item!.is_equipped,
-      )
+    const targetIds = previewedItems
+      .filter((item) => item.is_owned && !item.is_equipped)
       .map((item) => item.id);
 
     if (targetIds.length === 0) {
@@ -157,7 +159,11 @@ const ShopPage = () => {
               type="button"
               onClick={handleSave}
               disabled={saving}
-              className="rounded-xl bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-60"
+              className={`rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-60 ${
+                hasChanges
+                  ? "bg-blue-500 hover:bg-blue-400"
+                  : "bg-sky-400 hover:bg-sky-300"
+              }`}
             >
               {saving ? "저장 중…" : "내 키보드 저장하기"}
             </button>

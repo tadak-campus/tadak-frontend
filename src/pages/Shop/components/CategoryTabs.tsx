@@ -24,7 +24,7 @@ const CategoryTabs = ({ active, onChange }: Props) => {
             onClick={() => onChange(tab.type)}
             className={`rounded-full px-4 py-1.5 text-sm font-semibold transition ${
               isActive
-                ? "bg-sky-400 text-white"
+                ? "bg-blue-500 text-white"
                 : "bg-white text-slate-600 hover:bg-slate-100"
             }`}
           >
