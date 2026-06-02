@@ -101,18 +101,27 @@ const ShopPage = () => {
   // 현재 착용중이 아닌 아이템이 선택되어 저장할 변경이 있는 상태.
   const hasChanges = previewedItems.some((item) => !item.is_equipped);
 
-  // 저장: 미리보기로 고른 항목 중 보유 중이고 아직 미착용인 것만 착용한다.
+  // 저장: 미착용으로 바뀐 항목을 착용한다. 단, 그중 미보유가 하나라도 있으면
+  // 아무것도 장착하지 않고 먼저 구매하도록 안내한다.
   const handleSave = () => {
-    const targetIds = previewedItems
-      .filter((item) => item.is_owned && !item.is_equipped)
-      .map((item) => item.id);
+    const changes = previewedItems.filter((item) => !item.is_equipped);
 
-    if (targetIds.length === 0) {
-      alert("저장할 변경 사항이 없어요. 미보유 아이템은 먼저 구매해 주세요.");
+    if (changes.length === 0) {
+      alert("저장할 변경 사항이 없어요.");
       return;
     }
 
-    void save(targetIds);
+    const unowned = changes.filter((item) => !item.is_owned);
+    if (unowned.length > 0) {
+      alert(
+        `미보유 아이템을 먼저 구매해 주세요: ${unowned
+          .map((item) => item.name)
+          .join(", ")}`,
+      );
+      return;
+    }
+
+    void save(changes.map((item) => item.id));
   };
 
   return (
