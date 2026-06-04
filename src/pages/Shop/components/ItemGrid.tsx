@@ -5,9 +5,11 @@ type Props = {
   items: ShopItem[];
   selectedId?: number;
   onSelect: (item: ShopItem) => void;
+  onBuy: (item: ShopItem) => void;
+  busy?: boolean;
 };
 
-const ItemGrid = ({ items, selectedId, onSelect }: Props) => {
+const ItemGrid = ({ items, selectedId, onSelect, onBuy, busy }: Props) => {
   return (
     <div className="grid grid-cols-2 gap-4">
       {items.map((item) => (
@@ -16,6 +18,8 @@ const ItemGrid = ({ items, selectedId, onSelect }: Props) => {
           item={item}
           selected={item.id === selectedId}
           onSelect={onSelect}
+          onBuy={onBuy}
+          busy={busy}
         />
       ))}
     </div>
