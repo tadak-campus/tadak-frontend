@@ -157,18 +157,14 @@ const PlayPage = () => {
   };
 
   return (
-    <main className="flex-1 p-8">
-      <div className="mb-8">
+    <main className="flex-1 p-4">
+      <div className="mb-4">
         <h1 className="text-3xl font-bold">타자연습</h1>
       </div>
 
       {/* 상단 통계 카드 */}
-      <div className="grid grid-cols-5 gap-4 mb-8">
-        <StatCard
-          label="정확도"
-          value={`${accuracy}%`}
-          variant="green"
-        />
+      <div className="grid grid-cols-5 gap-4 mb-2">
+        <StatCard label="정확도" value={`${accuracy}%`} variant="green" />
         <StatCard
           label="CPM"
           value={isFinished ? finalCPM : currentCPM}
@@ -182,7 +178,7 @@ const PlayPage = () => {
         />
       </div>
 
-      <div className="p-6 rounded-xl shadow-md mb-8">
+      <div className="p-6 rounded-xl shadow-md mb-4">
         {/* 현재 문장 */}
         <SentenceDisplay sentence={currentSentence} typed={typed} />
 

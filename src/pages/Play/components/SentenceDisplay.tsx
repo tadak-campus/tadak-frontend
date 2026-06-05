@@ -5,7 +5,7 @@ type SentenceDisplayProps = {
 
 const SentenceDisplay = ({ sentence, typed }: SentenceDisplayProps) => {
   return (
-    <p className="text-2xl leading-relaxed mb-6 w-full px-4 py-3 bg-sky-300 border-3 border-sky-300 rounded-xl">
+    <p className="text-2xl leading-relaxed mb-2 w-full px-4 py-3 bg-sky-300 border-3 border-sky-300 rounded-xl">
       {sentence.split("").map((char, i) => {
         const typedChar = typed[i];
         let className = "text-white";

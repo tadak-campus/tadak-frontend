@@ -8,7 +8,7 @@ const UpcomingSentences = ({ sentences }: UpcomingSentencesProps) => {
       {sentences.map((sentence, i) => (
         <p
           key={i}
-          className="w-11/12 px-4 py-3 text-xl text-gray-400 border-3 border-gray-400 rounded-xl"
+          className="w-11/12 px-4 py-3 text-xl text-gray-400 bg-slate-300 rounded-xl"
         >
           {sentence}
         </p>
