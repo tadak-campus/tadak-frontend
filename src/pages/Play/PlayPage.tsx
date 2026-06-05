@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import Keyboard from "@components/Keyboard/Keyboard";
+import KeyboardStage from "@components/Keyboard/KeyboardStage";
+import { useEquippedKeyboardStyle } from "@hooks/useEquippedKeyboardStyle";
 import { qwertyLayout } from "@components/Keyboard/KeyboardLayout";
 import useKeyboardInput from "@components/Keyboard/useKeyboardInput";
 import StatCard from "@pages/Play/components/StatCard";
@@ -17,6 +18,7 @@ const PlayPage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [typed, setTyped] = useState("");
   const { pressedCodes, shiftActive } = useKeyboardInput();
+  const keyboardStyle = useEquippedKeyboardStyle();
 
   // 통계 관련 state
   const [accuracy, setAccuracy] = useState(100);
@@ -196,10 +198,11 @@ const PlayPage = () => {
         <UpcomingSentences sentences={remainingSentences} />
       </div>
 
-      <Keyboard
+      <KeyboardStage
         layout={qwertyLayout}
         pressedCodes={pressedCodes}
         shiftActive={shiftActive}
+        {...keyboardStyle}
       />
     </main>
   );
