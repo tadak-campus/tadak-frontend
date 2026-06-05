@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import KeyboardStage from "@components/Keyboard/KeyboardStage";
-import { useEquippedKeyboardStyle } from "@hooks/useEquippedKeyboardStyle";
 import { qwertyLayout } from "@components/Keyboard/KeyboardLayout";
 import useKeyboardInput from "@components/Keyboard/useKeyboardInput";
+import { useEquippedKeyboardStyle } from "@hooks/useEquippedKeyboardStyle";
 import StatCard from "@pages/Play/components/StatCard";
 import SentenceDisplay from "@pages/Play/components/SentenceDisplay";
 import UpcomingSentences from "@pages/Play/components/UpcomingSentences";
