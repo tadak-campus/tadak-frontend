@@ -69,3 +69,8 @@ export const KEYCAP_SKINS: Record<number, KeycapSkin> = {
     pressedText: "white",
   },
 };
+
+// 착용 KEYBOARD 아이템 → 키캡 스킨. 매칭 스킨이 없거나 아이템이 없으면 기본 스킨.
+export const keycapSkinForItem = (
+  item: ShopItem | null | undefined,
+): KeycapSkin => (item && KEYCAP_SKINS[item.id]) || defaultKeycapSkin;
