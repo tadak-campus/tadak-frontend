@@ -53,10 +53,25 @@ const Header = () => {
           </button>
 
           {open && (
-            <div className="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-lg z-50">
+            <div className="absolute right-0 z-50 mt-3 w-52 rounded-3xl border border-slate-200/80 bg-white/95 p-2 shadow-[0_18px_40px_rgba(15,23,42,0.08)] backdrop-blur-sm">
+              <div className="mb-1 flex items-center gap-3 px-2 py-2">
+                <BoringAvatar
+                  name={nickname}
+                  className="h-8 w-8 shrink-0 rounded-full ring-2 ring-white"
+                />
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-bold text-slate-800">
+                    {nickname}
+                  </p>
+                  <p className="text-xs font-semibold text-slate-400">
+                    내 프로필
+                  </p>
+                </div>
+              </div>
               <button
+                type="button"
                 onClick={handleLogout}
-                className="w-full text-left px-3 py-2 hover:bg-gray-100 flex items-center gap-2"
+                className="flex w-full items-center gap-2 rounded-2xl px-3 py-2.5 text-left text-sm font-bold text-slate-600 transition hover:bg-sky-400 hover:text-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
               >
                 <LogoutIcon fontSize="small" />
                 로그아웃
