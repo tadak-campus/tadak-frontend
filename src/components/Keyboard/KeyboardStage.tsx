@@ -23,7 +23,7 @@ const KeyboardStage = ({
 }: Props) => {
   return (
     <div
-      className="relative flex justify-center overflow-hidden rounded-2xl bg-slate-50 bg-cover bg-center p-8"
+      className="relative flex justify-start overflow-x-auto overflow-y-hidden rounded-2xl bg-slate-50 bg-cover bg-center p-4 sm:p-6 lg:justify-center lg:p-8"
       style={
         backgroundImageUrl
           ? { backgroundImage: `url("${backgroundImageUrl}")` }
@@ -45,7 +45,7 @@ const KeyboardStage = ({
         </span>
       )}
 
-      <div className="relative w-full max-w-190">
+      <div className="relative min-w-[720px] max-w-190 flex-1">
         <Keyboard
           layout={layout}
           pressedCodes={pressedCodes}
