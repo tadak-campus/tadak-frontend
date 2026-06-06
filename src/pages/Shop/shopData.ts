@@ -3,6 +3,13 @@ import {
   type KeycapSkin,
   type ShopItemType,
 } from "@components/Keyboard/cosmetics";
+import basic01 from "@assets/sounds/basic-01.wav";
+import basic02 from "@assets/sounds/basic-02.wav";
+import basic03 from "@assets/sounds/basic-03.wav";
+import spacebar01 from "@assets/sounds/spacebar-01.wav";
+import psyEe from "@assets/sounds/special-psy-ee.wav";
+import psyHey from "@assets/sounds/special-psy-hey.wav";
+import psyOp from "@assets/sounds/special-psy-op.mp3";
 
 // 효과음 파일 — GET /api/shop/summary 의 sound_files 원소 스키마.
 export type SoundFile = {
@@ -75,3 +82,19 @@ export const keycapSkinForItem = (
   item: ShopItem | null | undefined,
 ): KeycapSkin =>
   (item ? KEYCAP_SKINS[item.id] : undefined) ?? defaultKeycapSkin;
+
+// TODO: 효과음도 API 명세의 sound_files 대신 SOUND 아이템 id로 @assets/sounds 파일을 매핑하는 목업이다.
+// 각 팩은 사운드 URL 배열이며, 키 입력마다 배열에서 랜덤으로 하나를 재생한다.
+// special- 팩(사운드 5)은 여러 효과음을 무작위로 재생하고, 나머지는 단일 basic 사운드를 사용한다.
+export const SOUND_PACKS: Record<number, string[]> = {
+  4: [basic01],
+  5: [basic02],
+  6: [basic03],
+  7: [spacebar01],
+  8: [psyEe, psyHey, psyOp],
+};
+
+// 착용 SOUND 아이템 → 사운드 팩(URL 배열). 매칭 팩이 없거나 아이템이 없으면 null(무음).
+export const soundPackForItem = (
+  item: ShopItem | null | undefined,
+): string[] | null => (item ? SOUND_PACKS[item.id] : undefined) ?? null;

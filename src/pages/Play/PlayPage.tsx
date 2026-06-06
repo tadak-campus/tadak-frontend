@@ -5,6 +5,7 @@ import KeyboardStage from "@components/Keyboard/KeyboardStage";
 import { qwertyLayout } from "@components/Keyboard/KeyboardLayout";
 import useKeyboardInput from "@components/Keyboard/useKeyboardInput";
 import { useEquippedKeyboardStyle } from "@hooks/useEquippedKeyboardStyle";
+import { useTypingSound } from "@hooks/useTypingSound";
 import StatCard from "@pages/Play/components/StatCard";
 import SentenceDisplay from "@pages/Play/components/SentenceDisplay";
 import UpcomingSentences from "@pages/Play/components/UpcomingSentences";
@@ -48,6 +49,7 @@ const PlayPage = () => {
   const [typed, setTyped] = useState("");
   const { pressedCodes, shiftActive } = useKeyboardInput();
   const keyboardStyle = useEquippedKeyboardStyle();
+  useTypingSound();
   const { sentences } = usePracticeSentences();
   const activeSentences = sentences.length ? sentences : DEFAULT_SENTENCES;
 

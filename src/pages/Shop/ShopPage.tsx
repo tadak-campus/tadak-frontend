@@ -7,10 +7,12 @@ import { resolveAssetUrl } from "@apis/assetUrl";
 import {
   KEYCAP_SKINS,
   SLOT_TO_TYPE,
+  soundPackForItem,
   type EquippedItems,
   type EquippedSlot,
   type ShopItem,
 } from "@pages/Shop/shopData";
+import { usePlayTypingSound } from "@hooks/useTypingSound";
 import { useShop } from "@pages/Shop/useShop";
 import CategoryTabs from "@pages/Shop/components/CategoryTabs";
 import ItemGrid from "@pages/Shop/components/ItemGrid";
@@ -44,6 +46,13 @@ const ShopPage = () => {
       setPreviewByType(buildInitialPreview(summary.equipped_items));
     }
   }, [summary]);
+
+  // 미리보기로 고른 SOUND 아이템의 사운드를 타이핑 시 재생한다(보유/착용 여부와 무관한 미리듣기).
+  const previewSoundItem =
+    summary?.items.find(
+      (item) => item.type === "SOUND" && item.id === previewByType.SOUND,
+    ) ?? null;
+  usePlayTypingSound(soundPackForItem(previewSoundItem));
 
   if (loading) {
     return (
@@ -94,7 +103,9 @@ const ShopPage = () => {
   // 미리보기로 고른 아이템(타입별)의 실제 객체 목록.
   const previewedItems = (Object.keys(previewByType) as ShopItemType[])
     .map((type) =>
-      summary.items.find((i) => i.type === type && i.id === previewByType[type]),
+      summary.items.find(
+        (i) => i.type === type && i.id === previewByType[type],
+      ),
     )
     .filter((item): item is ShopItem => Boolean(item));
 
@@ -131,9 +142,6 @@ const ShopPage = () => {
         <section className="flex min-w-0 flex-col rounded-2xl bg-white p-4 shadow-md sm:p-5 xl:basis-[27rem] xl:shrink-0">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-2xl font-bold">상점</h2>
-            <span className="rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-700">
-              💰 {summary.point.toLocaleString()}
-            </span>
           </div>
           <div className="mb-4">
             <CategoryTabs active={activeTab} onChange={setActiveTab} />
