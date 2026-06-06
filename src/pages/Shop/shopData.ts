@@ -56,8 +56,8 @@ export const SLOT_TO_TYPE: Record<EquippedSlot, ShopItemType> = {
 // 매칭되는 id가 없으면 기본 스킨(defaultKeycapSkin)으로 폴백한다.
 // 실제 키캡 에셋/색 명세가 확정되면 교체한다.
 export const KEYCAP_SKINS: Record<number, KeycapSkin> = {
-  10: defaultKeycapSkin,
-  11: {
+  1: defaultKeycapSkin,
+  2: {
     plate: "#ecfdf5",
     base: "#a7f3d0",
     border: "#6ee7b7",
@@ -66,7 +66,7 @@ export const KEYCAP_SKINS: Record<number, KeycapSkin> = {
     pressedBorder: "#10b981",
     pressedText: "white",
   },
-  12: {
+  3: {
     plate: "#1f2937",
     base: "#f5f5f4",
     border: "#d6d3d1",
