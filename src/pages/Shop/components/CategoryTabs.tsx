@@ -14,7 +14,7 @@ const TABS: { type: ShopItemType; label: string }[] = [
 
 const CategoryTabs = ({ active, onChange }: Props) => {
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 overflow-x-auto pb-1">
       {TABS.map((tab) => {
         const isActive = tab.type === active;
         return (
@@ -22,7 +22,7 @@ const CategoryTabs = ({ active, onChange }: Props) => {
             key={tab.type}
             type="button"
             onClick={() => onChange(tab.type)}
-            className={`rounded-full px-4 py-1.5 text-sm font-semibold transition ${
+            className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-semibold transition ${
               isActive
                 ? "bg-blue-500 text-white"
                 : "bg-white text-slate-600 hover:bg-slate-100"

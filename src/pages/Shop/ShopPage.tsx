@@ -47,7 +47,7 @@ const ShopPage = () => {
 
   if (loading) {
     return (
-      <main className="flex min-h-[calc(100vh-6rem)] items-center justify-center p-8 text-slate-500">
+      <main className="flex min-h-[calc(100vh-7rem)] items-center justify-center text-slate-500">
         상점 정보를 불러오는 중…
       </main>
     );
@@ -55,7 +55,7 @@ const ShopPage = () => {
 
   if (error || !summary) {
     return (
-      <main className="flex min-h-[calc(100vh-6rem)] flex-col items-center justify-center gap-4 p-8">
+      <main className="flex min-h-[calc(100vh-7rem)] flex-col items-center justify-center gap-4">
         <p className="text-slate-600">
           {error ?? "상점 정보를 불러오지 못했습니다."}
         </p>
@@ -125,10 +125,10 @@ const ShopPage = () => {
   };
 
   return (
-    <main className="flex min-h-[calc(100vh-6rem)] flex-col p-8">
-      <div className="flex flex-1 flex-col gap-6 lg:flex-row lg:items-stretch">
+    <main className="flex min-h-[calc(100vh-7rem)] flex-col">
+      <div className="flex min-w-0 flex-1 flex-col gap-4 xl:flex-row xl:items-stretch">
         {/* 좌측: 상점 아이템 목록 카드 */}
-        <section className="flex flex-col rounded-2xl bg-white p-5 shadow-md lg:w-110 lg:shrink-0">
+        <section className="flex min-w-0 flex-col rounded-2xl bg-white p-4 shadow-md sm:p-5 xl:basis-[27rem] xl:shrink-0">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-2xl font-bold">상점</h2>
             <span className="rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-700">
@@ -138,7 +138,7 @@ const ShopPage = () => {
           <div className="mb-4">
             <CategoryTabs active={activeTab} onChange={setActiveTab} />
           </div>
-          <div className="flex-1 overflow-y-auto">
+          <div className="min-h-0 flex-1 overflow-y-auto">
             <ItemGrid
               items={itemsForTab}
               selectedId={previewByType[activeTab]}
@@ -150,9 +150,9 @@ const ShopPage = () => {
         </section>
 
         {/* 우측: 키보드 꾸미기 카드 (미리보기 + 저장 버튼 위아래 배치) */}
-        <section className="flex flex-1 flex-col rounded-2xl bg-white p-5 shadow-md">
+        <section className="flex min-w-0 flex-1 flex-col rounded-2xl bg-white p-4 shadow-md sm:p-5">
           <h2 className="mb-4 text-2xl font-bold">키보드 꾸미기</h2>
-          <div className="flex flex-1 flex-col justify-center">
+          <div className="flex min-w-0 flex-1 flex-col justify-center">
             <KeyboardStage
               layout={qwertyLayout}
               pressedCodes={pressedCodes}
