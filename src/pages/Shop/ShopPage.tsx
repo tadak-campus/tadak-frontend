@@ -8,10 +8,12 @@ import { resolveAssetUrl } from "@apis/assetUrl";
 import {
   KEYCAP_SKINS,
   SLOT_TO_TYPE,
+  soundPackForItem,
   type EquippedItems,
   type EquippedSlot,
   type ShopItem,
 } from "@pages/Shop/shopData";
+import { usePlayTypingSound } from "@hooks/useTypingSound";
 import { useShop } from "@pages/Shop/useShop";
 import CategoryTabs from "@pages/Shop/components/CategoryTabs";
 import ItemGrid from "@pages/Shop/components/ItemGrid";
@@ -45,6 +47,13 @@ const ShopPage = () => {
       setPreviewByType(buildInitialPreview(summary.equipped_items));
     }
   }, [summary]);
+
+  // 미리보기로 고른 SOUND 아이템의 사운드를 타이핑 시 재생한다(보유/착용 여부와 무관한 미리듣기).
+  const previewSoundItem =
+    summary?.items.find(
+      (item) => item.type === "SOUND" && item.id === previewByType.SOUND,
+    ) ?? null;
+  usePlayTypingSound(soundPackForItem(previewSoundItem));
 
   if (loading) {
     return (
@@ -95,7 +104,9 @@ const ShopPage = () => {
   // 미리보기로 고른 아이템(타입별)의 실제 객체 목록.
   const previewedItems = (Object.keys(previewByType) as ShopItemType[])
     .map((type) =>
-      summary.items.find((i) => i.type === type && i.id === previewByType[type]),
+      summary.items.find(
+        (i) => i.type === type && i.id === previewByType[type],
+      ),
     )
     .filter((item): item is ShopItem => Boolean(item));
 
