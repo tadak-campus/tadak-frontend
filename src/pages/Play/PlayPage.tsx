@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { isAxiosError } from "axios";
 import KeyboardStage from "@components/Keyboard/KeyboardStage";
 import { qwertyLayout } from "@components/Keyboard/KeyboardLayout";
 import useKeyboardInput from "@components/Keyboard/useKeyboardInput";
@@ -7,6 +9,14 @@ import StatCard from "@pages/Play/components/StatCard";
 import SentenceDisplay from "@pages/Play/components/SentenceDisplay";
 import UpcomingSentences from "@pages/Play/components/UpcomingSentences";
 import TypingInput from "@pages/Play/components/TypingInput";
+import ResultModal, {
+  type ResultModalStatus,
+} from "@pages/Play/components/ResultModal";
+import { completePractice } from "@apis/practice";
+import type {
+  PracticeCompleteRequest,
+  PracticeCompleteResponse,
+} from "@app-types/practice";
 import { usePracticeSentences } from "@contexts/PracticeSentencesContext";
 
 const DEFAULT_SENTENCES = [
@@ -14,6 +24,29 @@ const DEFAULT_SENTENCES = [
   "데이터 센터에 저장된 서버, 저장 공간 및 데이터베이스에 액세스할 수 있다.",
   "사용자는 하드웨어 인프라를 소유할 필요 없이 유연하게 사용량을 조절한다.",
 ];
+
+interface ApiValidationErrorDetail {
+  msg?: string;
+}
+
+interface ApiErrorResponse {
+  detail?: string | ApiValidationErrorDetail[];
+}
+
+const getErrorMessage = (error: unknown) => {
+  if (isAxiosError<ApiErrorResponse>(error)) {
+    const detail = error.response?.data?.detail;
+    if (typeof detail === "string") return detail;
+    if (Array.isArray(detail) && detail.length > 0) {
+      return detail
+        .map((item) => item.msg ?? "요청 값이 올바르지 않습니다.")
+        .join("\n");
+    }
+  }
+
+  if (error instanceof Error) return error.message;
+  return "포인트 적립에 실패했습니다.";
+};
 
 const PlayPage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -31,6 +64,15 @@ const PlayPage = () => {
   const [isFinished, setIsFinished] = useState(false);
   const [currentCPM, setCurrentCPM] = useState(0);
   const [finalCPM, setFinalCPM] = useState<number>(0);
+
+  // 결과 모달 관련 state
+  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<ResultModalStatus>("loading");
+  const [completeResult, setCompleteResult] =
+    useState<PracticeCompleteResponse | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const lastPayloadRef = useRef<PracticeCompleteRequest | null>(null);
 
   const currentSentence = activeSentences[currentIndex];
   const remainingSentences = activeSentences.slice(
@@ -142,6 +184,21 @@ const PlayPage = () => {
     }
   };
 
+  const submitResult = useCallback(async (payload: PracticeCompleteRequest) => {
+    lastPayloadRef.current = payload;
+    setSubmitStatus("loading");
+    setSubmitError(null);
+
+    try {
+      const data = await completePractice(payload);
+      setCompleteResult(data);
+      setSubmitStatus("success");
+    } catch (error) {
+      setSubmitError(getErrorMessage(error));
+      setSubmitStatus("error");
+    }
+  }, []);
+
   const finishTyping = () => {
     if (startTimeRef.current === null) return;
     if (isFinished) return;
@@ -157,6 +214,48 @@ const PlayPage = () => {
     setFinalCPM(cpm);
     setElapsedSeconds(Math.floor(totalSeconds));
     setIsFinished(true);
+
+    // 결과 백엔드 전송 + 모달 오픈
+    setIsModalOpen(true);
+    void submitResult({
+      completed_count: activeSentences.length,
+      accuracy,
+      speed: cpm,
+    });
+  };
+
+  // 타자 상태 전체 초기화 (다시하기)
+  const resetTyping = () => {
+    setCurrentIndex(0);
+    setTyped("");
+    setAccuracy(100);
+    setErrorCount(0);
+    setElapsedSeconds(0);
+    setIsStarted(false);
+    setIsFinished(false);
+    setCurrentCPM(0);
+    setFinalCPM(0);
+    startTimeRef.current = null;
+    totalCharsRef.current = 0;
+    typedRef.current = "";
+    pastErrorsRef.current = 0;
+  };
+
+  const handleConfirm = () => {
+    setIsModalOpen(false);
+    navigate("/play");
+  };
+
+  const handleRetry = () => {
+    setIsModalOpen(false);
+    resetTyping();
+    inputRef.current?.focus();
+  };
+
+  const handleRetryApi = () => {
+    if (lastPayloadRef.current) {
+      void submitResult(lastPayloadRef.current);
+    }
   };
 
   return (
@@ -202,6 +301,17 @@ const PlayPage = () => {
         pressedCodes={pressedCodes}
         shiftActive={shiftActive}
         {...keyboardStyle}
+      />
+
+      <ResultModal
+        open={isModalOpen}
+        status={submitStatus}
+        earnedPoint={completeResult?.earned_point ?? 0}
+        totalPoint={completeResult?.total_point ?? 0}
+        errorMessage={submitError}
+        onConfirm={handleConfirm}
+        onRetry={handleRetry}
+        onRetryApi={handleRetryApi}
       />
     </main>
   );

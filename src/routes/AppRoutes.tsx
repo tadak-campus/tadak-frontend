@@ -6,6 +6,7 @@ import PlayPage from '@pages/Play/PlayPage';
 import PracticeMenuPage from '@pages/Play/PracticeMenuPage';
 import ShopPage from '@pages/Shop/ShopPage';
 import KeyboardPreview from '@pages/dev/KeyboardPreview';
+import ResultModalPreview from '@pages/dev/ResultModalPreview';
 
 const AppRoutes = () =>
   createBrowserRouter([
@@ -47,7 +48,12 @@ const AppRoutes = () =>
         },
       ],
     },
-    ...(import.meta.env.DEV ? [{ path: '/dev/keyboard', element: <KeyboardPreview /> }] : []),
+    ...(import.meta.env.DEV
+      ? [
+          { path: '/dev/keyboard', element: <KeyboardPreview /> },
+          { path: '/dev/result-modal', element: <ResultModalPreview /> },
+        ]
+      : []),
   ]);
 
 export default AppRoutes;
