@@ -1,11 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import LogoutIcon from "@mui/icons-material/Logout";
 import icPoint from "@assets/ic_point.png";
+import BoringAvatar from "@components/BoringAvatar";
 import { headerShell, headerActions, headerChip } from "@design-system";
+import { useMe } from "@hooks/useMe";
+import { authTokenStorage } from "@utils/authTokenStorage";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
   const popRef = useRef<HTMLDivElement | null>(null);
+  const { me, loading } = useMe();
+
+  const nickname = me?.profile_nickname || "타다익";
+  const pointLabel = loading && !me ? "..." : (me?.point ?? 0).toLocaleString();
 
   useEffect(() => {
     function handleDoc(e: MouseEvent) {
@@ -18,7 +25,8 @@ const Header = () => {
   }, []);
 
   const handleLogout = () => {
-    window.location.href = "/logout";
+    authTokenStorage.clear();
+    window.location.href = "/login";
   };
 
   return (
@@ -26,7 +34,7 @@ const Header = () => {
       <div className={headerActions}>
         <div className={headerChip} aria-hidden>
           <img src={icPoint} alt="" className="w-8 h-8" />
-          <span>12,450</span>
+          <span>{pointLabel}</span>
         </div>
 
         <div className="relative" ref={popRef}>
@@ -36,10 +44,12 @@ const Header = () => {
             aria-haspopup="true"
             aria-expanded={open}
           >
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full bg-gray-200 flex items-center justify-center text-sm font-semibold">
-              타
-            </div>
-            <span className="hidden sm:inline">타다익</span>
+            <BoringAvatar
+              name={nickname}
+              title={`${nickname} 프로필`}
+              className="absolute left-0 top-1/2 h-9 w-9 -translate-y-1/2 rounded-full ring-2 ring-white"
+            />
+            <span className="hidden sm:inline">{nickname}</span>
           </button>
 
           {open && (
