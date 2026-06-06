@@ -20,6 +20,7 @@ import uploadHeroImage from "@assets/bg_upload_hero.png";
 import icPoint from "@assets/ic_point.png";
 import { generatePracticeSentences } from "@apis/practice";
 import { getShopSummary } from "@apis/shop";
+import { usePracticeSentences } from "@contexts/PracticeSentencesContext";
 import { panel, panelPadding } from "@design-system";
 import KeyboardStage from "@components/Keyboard/KeyboardStage";
 import { qwertyLayout } from "@components/Keyboard/KeyboardLayout";
@@ -173,7 +174,8 @@ const HomePage = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [uploadMessage, setUploadMessage] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
-  const [generatedSentences, setGeneratedSentences] = useState<string[]>([]);
+  const { sentences: generatedSentences, setSentences: setGeneratedSentences } =
+    usePracticeSentences();
   const [recentFiles, setRecentFiles] = useState(mockRecentFiles);
 
   useEffect(() => {
@@ -265,7 +267,7 @@ const HomePage = () => {
     } finally {
       setIsGenerating(false);
     }
-  }, []);
+  }, [setGeneratedSentences]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];

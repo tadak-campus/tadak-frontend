@@ -7,8 +7,9 @@ import StatCard from "@pages/Play/components/StatCard";
 import SentenceDisplay from "@pages/Play/components/SentenceDisplay";
 import UpcomingSentences from "@pages/Play/components/UpcomingSentences";
 import TypingInput from "@pages/Play/components/TypingInput";
+import { usePracticeSentences } from "@contexts/PracticeSentencesContext";
 
-const SENTENCES = [
+const DEFAULT_SENTENCES = [
   "클라우드 컴퓨팅은 인터넷을 통해 필요한 만큼 컴퓨팅 자원을 제공하는 방식이다.",
   "데이터 센터에 저장된 서버, 저장 공간 및 데이터베이스에 액세스할 수 있다.",
   "사용자는 하드웨어 인프라를 소유할 필요 없이 유연하게 사용량을 조절한다.",
@@ -19,6 +20,8 @@ const PlayPage = () => {
   const [typed, setTyped] = useState("");
   const { pressedCodes, shiftActive } = useKeyboardInput();
   const keyboardStyle = useEquippedKeyboardStyle();
+  const { sentences } = usePracticeSentences();
+  const activeSentences = sentences.length ? sentences : DEFAULT_SENTENCES;
 
   // 통계 관련 state
   const [accuracy, setAccuracy] = useState(100);
@@ -29,8 +32,8 @@ const PlayPage = () => {
   const [currentCPM, setCurrentCPM] = useState(0);
   const [finalCPM, setFinalCPM] = useState<number>(0);
 
-  const currentSentence = SENTENCES[currentIndex];
-  const remainingSentences = SENTENCES.slice(
+  const currentSentence = activeSentences[currentIndex];
+  const remainingSentences = activeSentences.slice(
     currentIndex + 1,
     currentIndex + 2,
   );
@@ -129,7 +132,7 @@ const PlayPage = () => {
       // 현재 문장 길이 누적
       totalCharsRef.current += currentSentence.length;
 
-      if (currentIndex < SENTENCES.length - 1) {
+      if (currentIndex < activeSentences.length - 1) {
         setCurrentIndex(currentIndex + 1);
         setTyped("");
       } else {

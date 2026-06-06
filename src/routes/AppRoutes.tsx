@@ -3,6 +3,7 @@ import MainLayout from '@layouts/MainLayout';
 import HomePage from '@pages/HomePage';
 import LoginPage from '@pages/LoginPage';
 import PlayPage from '@pages/Play/PlayPage';
+import PracticeMenuPage from '@pages/Play/PracticeMenuPage';
 import ShopPage from '@pages/Shop/ShopPage';
 import KeyboardPreview from '@pages/dev/KeyboardPreview';
 
@@ -30,6 +31,10 @@ const AppRoutes = () =>
         },
         {
           path: '/play',
+          element: <PracticeMenuPage />,
+        },
+        {
+          path: '/play/typing',
           element: <PlayPage />,
         },
         {
