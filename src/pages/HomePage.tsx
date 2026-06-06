@@ -4,6 +4,7 @@ import {
   useMemo,
   useRef,
   useState,
+  type CSSProperties,
   type ReactNode,
 } from "react";
 import { isAxiosError } from "axios";
@@ -14,10 +15,14 @@ import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
+import ControlPointDuplicateOutlinedIcon from "@mui/icons-material/ControlPointDuplicateOutlined";
 import KeyboardOutlinedIcon from "@mui/icons-material/KeyboardOutlined";
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
+import loadingFrame1 from "@assets/home/bg_loading-1.png";
+import loadingFrame2 from "@assets/home/bg_loading-2.png";
+import loadingFrame3 from "@assets/home/bg_loading-3.png";
+import loadingFrame4 from "@assets/home/bg_loading-4.png";
 import uploadHeroImage from "@assets/bg_upload_hero.png";
-import icPoint from "@assets/ic_point.png";
 import { generatePracticeSentences } from "@apis/practice";
 import { getShopSummary } from "@apis/shop";
 import { usePracticeSentences } from "@contexts/PracticeSentencesContext";
@@ -39,6 +44,13 @@ type RecentFile = {
   statusTone: "green" | "purple";
   date: string;
 };
+
+const loadingFrames = [
+  loadingFrame1,
+  loadingFrame2,
+  loadingFrame3,
+  loadingFrame4,
+] as const;
 
 type PracticeSet = {
   title: string;
@@ -134,7 +146,7 @@ const keyboardThemes = [
   "라벤더 드림",
   "피치 펀더",
 ];
-const keyboardColors = ["#83b6fc", "#f7a8c8", "#a7f3d0", "#c4b5fd", "#fde68a"];
+const keyboardColors = ["#c7ddff", "#ffd2e3", "#c8f7df", "#ddd6fe", "#fef3c7"];
 const supportedExtensions = [".pdf", ".ppt", ".pptx"];
 const maxFileSize = 50 * 1024 * 1024;
 
@@ -162,9 +174,9 @@ const isSupportedFile = (file: File) => {
 };
 
 const getLevelClass = (level: PracticeSet["level"]) => {
-  if (level === "Hard") return "bg-rose-100 text-rose-600";
-  if (level === "Easy") return "bg-sky-100 text-sky-600";
-  return "bg-violet-100 text-violet-600";
+  if (level === "Hard") return "bg-rose-50 text-rose-500";
+  if (level === "Easy") return "bg-sky-50 text-sky-500";
+  return "bg-violet-50 text-violet-500";
 };
 
 const HomePage = () => {
@@ -174,6 +186,9 @@ const HomePage = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [uploadMessage, setUploadMessage] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [generatingFileName, setGeneratingFileName] = useState<string | null>(
+    null,
+  );
   const { sentences: generatedSentences, setSentences: setGeneratedSentences } =
     usePracticeSentences();
   const [recentFiles, setRecentFiles] = useState(mockRecentFiles);
@@ -230,44 +245,51 @@ const HomePage = () => {
     ? [generatedSet, ...mockPracticeSets.slice(0, 3)]
     : mockPracticeSets;
 
-  const handleFile = useCallback(async (file: File) => {
-    if (!isSupportedFile(file)) {
-      setUploadError("PDF, PPT, PPTX 파일만 업로드할 수 있습니다.");
-      setUploadMessage(null);
-      return;
-    }
+  const handleFile = useCallback(
+    async (file: File) => {
+      if (!isSupportedFile(file)) {
+        setUploadError("PDF, PPT, PPTX 파일만 업로드할 수 있습니다.");
+        setUploadMessage(null);
+        return;
+      }
 
-    if (file.size > maxFileSize) {
-      setUploadError("최대 50MB 이하 파일만 업로드할 수 있습니다.");
-      setUploadMessage(null);
-      return;
-    }
+      if (file.size > maxFileSize) {
+        setUploadError("최대 50MB 이하 파일만 업로드할 수 있습니다.");
+        setUploadMessage(null);
+        return;
+      }
 
-    setIsGenerating(true);
-    setUploadError(null);
-    setUploadMessage(`${file.name} 파일을 분석하고 있습니다.`);
+      setIsGenerating(true);
+      setUploadError(null);
+      setGeneratingFileName(file.name);
+      setUploadMessage(`${file.name} 연습 세트를 생성하고 있어요.`);
 
-    try {
-      const data = await generatePracticeSentences(file);
-      setGeneratedSentences(data.sentences);
-      setRecentFiles((prev) => [
-        {
-          name: file.name,
-          type: getFileType(file.name),
-          status: "생성 완료",
-          statusTone: "green",
-          date: "방금 전",
-        },
-        ...prev.slice(0, 4),
-      ]);
-      setUploadMessage(`${data.sentences.length}개의 맞춤 문장을 생성했어요.`);
-    } catch (error) {
-      setUploadError(getErrorMessage(error));
-      setUploadMessage(null);
-    } finally {
-      setIsGenerating(false);
-    }
-  }, [setGeneratedSentences]);
+      try {
+        const data = await generatePracticeSentences(file);
+        setGeneratedSentences(data.sentences);
+        setRecentFiles((prev) => [
+          {
+            name: file.name,
+            type: getFileType(file.name),
+            status: "생성 완료",
+            statusTone: "green",
+            date: "방금 전",
+          },
+          ...prev.slice(0, 4),
+        ]);
+        setUploadMessage(
+          `${data.sentences.length}개의 맞춤 문장을 생성했어요.`,
+        );
+      } catch (error) {
+        setUploadError(getErrorMessage(error));
+        setUploadMessage(null);
+      } finally {
+        setIsGenerating(false);
+        setGeneratingFileName(null);
+      }
+    },
+    [setGeneratedSentences],
+  );
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -297,7 +319,7 @@ const HomePage = () => {
       </section>
 
       <section className="grid gap-4 xl:grid-cols-[minmax(0,1.7fr)_minmax(280px,0.95fr)]">
-        <article className="relative min-h-[520px] overflow-hidden rounded-[32px] border border-sky-200/80 bg-[#eaf6ff] p-5 shadow-[0_18px_42px_rgba(59,91,196,0.12)] sm:p-7 lg:min-h-[460px]">
+        <article className="relative min-h-[520px] overflow-hidden rounded-[32px] border border-sky-100/80 bg-[#f3fbff] p-5 shadow-[0_18px_42px_rgba(125,173,220,0.12)] sm:p-7 lg:min-h-[460px]">
           <img
             src={uploadHeroImage}
             alt=""
@@ -305,8 +327,8 @@ const HomePage = () => {
             className="absolute inset-0 h-full w-full object-cover object-[58%_center]"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-white/60 via-white/25 to-transparent" />
-          <div className="relative z-10 flex min-h-[472px] max-w-[620px] flex-col justify-center lg:min-h-[404px]">
-            <p className="mb-2 inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1 text-xs font-semibold text-sky-700 shadow-sm">
+          <div className="relative z-10 flex min-h-[472px] max-w-fit flex-col items-start justify-center lg:min-h-[404px]">
+            <p className="mb-2 inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1 text-xs font-semibold text-sky-500 shadow-sm">
               <AutoAwesomeOutlinedIcon fontSize="small" />
               AI 맞춤 학습
             </p>
@@ -318,51 +340,57 @@ const HomePage = () => {
               자동으로 생성해드려요.
             </p>
 
-            <div
-              role="button"
-              tabIndex={0}
-              onDragOver={(event) => event.preventDefault()}
-              onDrop={handleDrop}
-              onKeyDown={(event) => {
-                if (event.key === "Enter" || event.key === " ") {
-                  event.preventDefault();
-                  fileInputRef.current?.click();
-                }
-              }}
-              className="mt-6 flex min-h-42 flex-col items-center justify-center rounded-[24px] border-2 border-dashed border-sky-300/80 bg-white/75 px-4 py-6 text-center shadow-inner backdrop-blur-[1px] transition hover:border-sky-400 hover:bg-white/90 focus-visible:outline-3 w-[70%] focus-visible:outline-offset-4 focus-visible:outline-sky-400"
-            >
-              <CloudUploadOutlinedIcon
-                className="text-sky-500"
-                sx={{ fontSize: 44 }}
+            {isGenerating ? (
+              <GenerationLoadingDropzone
+                fileName={generatingFileName}
+                message={uploadMessage}
               />
-              <p className="mt-3 text-sm font-bold text-slate-800">
-                클릭하거나 파일을 여기로 드래그하세요
-              </p>
-              <p className="mt-1 text-xs font-medium text-slate-500">
-                지원 형식: .pdf, .ppt, .pptx (최대 50MB)
-              </p>
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={isGenerating}
-                className="mt-5 rounded-full border border-sky-400 bg-white px-9 py-2 text-sm font-bold text-sky-600 shadow-sm transition hover:bg-sky-50 disabled:cursor-wait disabled:opacity-60"
+            ) : (
+              <div
+                role="button"
+                tabIndex={0}
+                onDragOver={(event) => event.preventDefault()}
+                onDrop={handleDrop}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    fileInputRef.current?.click();
+                  }
+                }}
+                className="relative mt-6 flex h-[214px] flex-col items-center justify-center overflow-hidden rounded-[24px] border-2 border-dashed border-sky-200/80 bg-white/75 px-4 py-6 text-center shadow-inner backdrop-blur-[1px] transition hover:border-sky-300 hover:bg-white/90 focus-visible:outline-3 w-90 lg:w-[460px] focus-visible:outline-offset-4 focus-visible:outline-sky-300"
               >
-                {isGenerating ? "생성 중" : "파일 선택"}
-              </button>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".pdf,.ppt,.pptx"
-                onChange={handleFileChange}
-                className="hidden"
-              />
-            </div>
+                <CloudUploadOutlinedIcon
+                  className="text-sky-400"
+                  sx={{ fontSize: 44 }}
+                />
+                <p className="mt-3 text-sm font-bold text-slate-800">
+                  클릭하거나 파일을 여기로 드래그하세요
+                </p>
+                <p className="mt-1 text-xs font-medium text-slate-500">
+                  지원 형식: .pdf, .ppt, .pptx (최대 50MB)
+                </p>
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="mt-5 rounded-full border border-sky-200 bg-white px-9 py-2 text-sm font-bold text-sky-500 shadow-sm transition hover:bg-sky-50 disabled:cursor-wait disabled:opacity-60"
+                >
+                  파일 선택
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".pdf,.ppt,.pptx"
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+              </div>
+            )}
 
-            {(uploadMessage || uploadError) && (
+            {((!isGenerating && uploadMessage) || uploadError) && (
               <p
                 className={`mt-3 rounded-full px-4 py-2 text-xs font-semibold ${
                   uploadError
-                    ? "bg-red-50 text-red-600"
+                    ? "bg-rose-50 text-rose-500"
                     : "bg-white/75 text-slate-600"
                 }`}
               >
@@ -371,7 +399,7 @@ const HomePage = () => {
             )}
 
             <p className="mt-5 inline-flex items-center gap-2 rounded-full bg-white/65 px-3 py-2 text-xs font-medium text-slate-600">
-              <InfoOutlinedIcon fontSize="small" className="text-sky-500" />
+              <InfoOutlinedIcon fontSize="small" className="text-sky-400" />
               표, 그래프, 주요 키워드를 포함하면 더 정확한 연습 세트를 만들 수
               있어요.
             </p>
@@ -384,14 +412,16 @@ const HomePage = () => {
             value={meLoading && !me ? "..." : point.toLocaleString()}
             suffix="P"
             helper={`+ ${mockHomeStats.earnedPointToday}P 오늘 획득`}
+            info="상점에서 사용할 수 있는 현재 포인트예요."
             tone="mint"
-            visual={<PointCoin />}
+            visual={<ControlPointDuplicateOutlinedIcon sx={{ fontSize: 58 }} />}
           />
           <HomeStatCard
             title="연속 학습"
             value={mockHomeStats.streakDays.toString()}
             suffix="일"
             helper={`최고 기록 ${mockHomeStats.bestStreakDays}일`}
+            info="하루에 한 번 이상 연습하면 연속 학습 기록이 이어져요."
             tone="violet"
             visual={<CalendarMonthOutlinedIcon sx={{ fontSize: 58 }} />}
           />
@@ -400,6 +430,7 @@ const HomePage = () => {
             value={mockHomeStats.todayTyped.toLocaleString()}
             suffix="타"
             helper={`목표 ${mockHomeStats.todayTarget.toLocaleString()}타`}
+            info="오늘 연습에서 입력한 글자 수를 기준으로 집계해요."
             tone="rose"
             visual={<KeyboardOutlinedIcon sx={{ fontSize: 58 }} />}
           />
@@ -440,7 +471,7 @@ const HomePage = () => {
           </div>
           <a
             href="/play"
-            className="mt-5 flex w-full items-center justify-center gap-3 rounded-2xl bg-violet-600 px-5 py-3 text-sm font-bold text-white shadow-[0_12px_24px_rgba(124,58,237,0.24)] transition hover:bg-violet-500 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-violet-400"
+            className="mt-5 flex w-full items-center justify-center gap-3 rounded-2xl bg-violet-200 px-5 py-3 text-sm font-bold text-violet-500 shadow-[0_12px_24px_rgba(196,181,253,0.24)] transition hover:bg-violet-100 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-violet-200"
           >
             모든 연습 세트 보기
             <ChevronRightOutlinedIcon fontSize="small" />
@@ -456,7 +487,7 @@ const HomePage = () => {
                 type="button"
                 className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-bold transition ${
                   index === 0
-                    ? "bg-sky-400 text-white shadow-sm"
+                    ? "bg-sky-200 text-sky-500 shadow-sm"
                     : "bg-violet-50 text-slate-600 hover:bg-slate-100"
                 }`}
               >
@@ -488,7 +519,7 @@ const HomePage = () => {
                     key={color}
                     className={`h-5 w-5 rounded-full border ${
                       index === 0
-                        ? "border-sky-500 ring-2 ring-sky-200"
+                        ? "border-sky-300 ring-2 ring-sky-100"
                         : "border-white"
                     }`}
                     style={{ backgroundColor: color }}
@@ -499,14 +530,14 @@ const HomePage = () => {
             <div>
               <p>키 모양</p>
               <div className="mt-2 flex gap-2">
-                <span className="h-7 w-7 rounded-lg border-2 border-sky-400" />
+                <span className="h-7 w-7 rounded-lg border-2 border-sky-200" />
                 <span className="h-7 w-7 rounded-full border border-slate-200" />
                 <span className="h-7 w-7 rounded-xl border border-slate-200" />
               </div>
             </div>
             <div>
               <p>효과</p>
-              <div className="mt-2 flex h-7 w-13 items-center rounded-full bg-sky-400 p-1">
+              <div className="mt-2 flex h-7 w-13 items-center rounded-full bg-sky-200 p-1">
                 <span className="ml-auto h-5 w-5 rounded-full bg-white shadow-sm" />
               </div>
             </div>
@@ -514,13 +545,73 @@ const HomePage = () => {
 
           <a
             href="/shop"
-            className="mt-5 flex items-center justify-center gap-2 rounded-2xl border border-sky-300 bg-white px-4 py-3 text-sm font-bold text-sky-600 transition hover:bg-sky-50 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-sky-400"
+            className="mt-5 flex items-center justify-center gap-2 rounded-2xl border border-sky-200 bg-white px-4 py-3 text-sm font-bold text-sky-500 transition hover:bg-sky-50 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-sky-200"
           >
             <DownloadOutlinedIcon fontSize="small" />내 키보드 저장하기
           </a>
         </article>
       </section>
     </main>
+  );
+};
+
+const GenerationLoadingDropzone = ({
+  fileName,
+  message,
+}: {
+  fileName: string | null;
+  message: string | null;
+}) => {
+  const frameDurationSeconds = 4.8;
+
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      className="relative mt-6 flex h-[214px] w-90 overflow-hidden rounded-[24px] border-2 border-dashed border-sky-200/80 bg-white/75 text-center shadow-inner backdrop-blur-[1px] lg:w-[460px]"
+    >
+      <style>
+        {`
+          @keyframes tadakLoadingFrame {
+            0%, 100% {
+              opacity: 0;
+            }
+            6%, 24% {
+              opacity: 1;
+            }
+            32%, 100% {
+              opacity: 0;
+            }
+          }
+        `}
+      </style>
+      <span className="sr-only">{message ?? "자료를 읽고 있어요."}</span>
+      {loadingFrames.map((frame, index) => (
+        <img
+          key={frame}
+          src={frame}
+          alt=""
+          aria-hidden
+          className="absolute inset-x-0 top-1/2 h-[70%] w-full -translate-y-1/2 object-contain object-center opacity-0"
+          style={
+            {
+              animation: `tadakLoadingFrame ${frameDurationSeconds}s ease-in-out infinite`,
+              animationDelay: `${index * (frameDurationSeconds / loadingFrames.length)}s`,
+            } satisfies CSSProperties
+          }
+        />
+      ))}
+      <p className="absolute inset-x-4 bottom-4 z-10 flex min-w-0 items-center justify-center gap-1 rounded-full bg-white/80 px-4 py-2 text-center text-xs font-bold text-sky-500 shadow-sm">
+        {fileName ? (
+          <>
+            <span className="min-w-0 truncate">{fileName}</span>
+            <span className="shrink-0">연습 세트를 생성하고 있어요.</span>
+          </>
+        ) : (
+          "연습 세트를 생성하고 있어요."
+        )}
+      </p>
+    </div>
   );
 };
 
@@ -537,7 +628,7 @@ const CardHeader = ({
     <div className="flex min-w-0 items-center gap-2">
       <h2 className="truncate text-lg font-bold text-slate-950">{title}</h2>
       {badge && (
-        <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-violet-100 px-2 py-1 text-xs font-bold text-violet-600">
+        <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-violet-50 px-2 py-1 text-xs font-bold text-violet-500">
           <AutoAwesomeOutlinedIcon sx={{ fontSize: 14 }} />
           {badge}
         </span>
@@ -546,7 +637,7 @@ const CardHeader = ({
     {action && (
       <button
         type="button"
-        className="flex shrink-0 items-center text-xs font-semibold text-slate-500 transition hover:text-sky-600"
+        className="flex shrink-0 items-center text-xs font-semibold text-slate-500 transition hover:text-sky-500"
       >
         {action}
         <ChevronRightOutlinedIcon sx={{ fontSize: 18 }} />
@@ -560,6 +651,7 @@ const HomeStatCard = ({
   value,
   suffix,
   helper,
+  info,
   tone,
   visual,
 }: {
@@ -567,23 +659,33 @@ const HomeStatCard = ({
   value: string;
   suffix: string;
   helper: string;
+  info: string;
   tone: "mint" | "violet" | "rose";
   visual: ReactNode;
 }) => {
   const toneClass = {
-    mint: "border-emerald-100 bg-emerald-50 text-emerald-700",
-    violet: "border-violet-100 bg-violet-50 text-violet-700",
-    rose: "border-rose-100 bg-rose-50 text-rose-600",
+    mint: "border-emerald-100 bg-emerald-50 text-emerald-500",
+    violet: "border-violet-100 bg-violet-50 text-violet-500",
+    rose: "border-rose-100 bg-rose-50 text-rose-500",
   }[tone];
 
   return (
     <article
-      className={`relative min-h-34 overflow-hidden rounded-[28px] border p-5 shadow-[0_14px_34px_rgba(15,23,42,0.06)] ${toneClass}`}
+      className={`relative min-h-34 overflow-visible rounded-[28px] border p-5 shadow-[0_14px_34px_rgba(15,23,42,0.06)] ${toneClass}`}
     >
       <div className="relative z-10">
-        <p className="flex items-center gap-1 text-sm font-bold">
+        <p className="relative flex items-center gap-1 text-sm font-bold">
           {title}
-          <InfoOutlinedIcon sx={{ fontSize: 15 }} className="opacity-60" />
+          <span
+            tabIndex={0}
+            aria-label={info}
+            className="group inline-flex cursor-help rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-200"
+          >
+            <InfoOutlinedIcon sx={{ fontSize: 15 }} className="opacity-60" />
+            <span className="pointer-events-none absolute left-0 top-6 z-30 w-52 rounded-xl bg-white/95 px-3 py-2 text-xs font-semibold leading-5 text-slate-500 opacity-0 shadow-[0_10px_24px_rgba(148,163,184,0.18)] ring-1 ring-slate-100 transition group-hover:opacity-100 group-focus:opacity-100 group-focus-visible:opacity-100">
+              {info}
+            </span>
+          </span>
         </p>
         <p className="mt-3 flex items-end gap-1 text-3xl font-black leading-none">
           {value}
@@ -591,32 +693,24 @@ const HomeStatCard = ({
         </p>
         <p className="mt-3 text-sm font-semibold opacity-90">{helper}</p>
       </div>
-      <div className="absolute -right-3 bottom-1 opacity-30 sm:opacity-40">
-        {visual}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[28px]">
+        <div className="absolute -right-3 bottom-1 opacity-30 sm:opacity-40">
+          {visual}
+        </div>
       </div>
     </article>
   );
 };
 
-const PointCoin = () => (
-  <div className="relative h-20 w-20">
-    <div className="absolute inset-0 rounded-full bg-amber-300 shadow-[inset_-8px_-8px_0_rgba(217,119,6,0.22)]" />
-    <img
-      src={icPoint}
-      alt=""
-      aria-hidden
-      className="absolute left-1/2 top-1/2 h-13 w-13 -translate-x-1/2 -translate-y-1/2"
-    />
-  </div>
-);
-
 const RecentFileRow = ({ file }: { file: RecentFile }) => {
   const fileColor =
-    file.type === "pdf" ? "bg-red-500 text-white" : "bg-orange-500 text-white";
+    file.type === "pdf"
+      ? "bg-rose-100 text-rose-500"
+      : "bg-amber-100 text-amber-500";
   const statusColor =
     file.statusTone === "green"
-      ? "bg-emerald-100 text-emerald-700"
-      : "bg-violet-100 text-violet-700";
+      ? "bg-emerald-50 text-emerald-500"
+      : "bg-violet-50 text-violet-500";
 
   return (
     <div className="grid grid-cols-[minmax(0,1.4fr)_88px_70px] items-center gap-3 py-3">
@@ -651,9 +745,9 @@ const PracticeSetRow = ({
 }) => (
   <a
     href="/play"
-    className="grid grid-cols-[34px_34px_minmax(0,1fr)_auto] items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50/70 px-3 py-3 transition hover:border-violet-200 hover:bg-white hover:shadow-sm"
+    className="grid grid-cols-[34px_34px_minmax(0,1fr)_auto] items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50/70 px-3 py-3 transition hover:border-violet-100 hover:bg-white hover:shadow-sm"
   >
-    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-violet-500 text-sm font-black text-white">
+    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-violet-200 text-sm font-black text-violet-500">
       {index}
     </span>
     <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-slate-500 shadow-sm">

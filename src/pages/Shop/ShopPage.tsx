@@ -3,6 +3,7 @@ import KeyboardStage from "@components/Keyboard/KeyboardStage";
 import { qwertyLayout } from "@components/Keyboard/KeyboardLayout";
 import useKeyboardInput from "@components/Keyboard/useKeyboardInput";
 import type { ShopItemType } from "@components/Keyboard/cosmetics";
+import icPoint from "@assets/ic_point.png";
 import { resolveAssetUrl } from "@apis/assetUrl";
 import {
   KEYCAP_SKINS,
@@ -142,6 +143,10 @@ const ShopPage = () => {
         <section className="flex min-w-0 flex-col rounded-2xl bg-white p-4 shadow-md sm:p-5 xl:basis-[27rem] xl:shrink-0">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-2xl font-bold">상점</h2>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-700">
+              <img src={icPoint} alt="" aria-hidden className="h-5 w-5" />
+              {summary.point.toLocaleString()}
+            </span>
           </div>
           <div className="mb-4">
             <CategoryTabs active={activeTab} onChange={setActiveTab} />
