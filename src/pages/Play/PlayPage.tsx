@@ -155,13 +155,13 @@ const PlayPage = () => {
   };
 
   return (
-    <main className="flex-1 p-8">
+    <main className="flex-1">
       <div className="mb-8">
         <h1 className="text-3xl font-bold">타자연습</h1>
       </div>
 
       {/* 상단 통계 카드 */}
-      <div className="grid grid-cols-5 gap-4 mb-8">
+      <div className="grid grid-cols-2 gap-4 mb-8 lg:grid-cols-4">
         <StatCard
           label="정확도"
           value={`${accuracy}%`}
@@ -180,7 +180,7 @@ const PlayPage = () => {
         />
       </div>
 
-      <div className="p-6 rounded-xl shadow-md mb-8">
+      <div className="mb-8 rounded-2xl bg-white p-4 shadow-md sm:p-6">
         {/* 현재 문장 */}
         <SentenceDisplay sentence={currentSentence} typed={typed} />
 
@@ -196,11 +196,15 @@ const PlayPage = () => {
         <UpcomingSentences sentences={remainingSentences} />
       </div>
 
-      <Keyboard
-        layout={qwertyLayout}
-        pressedCodes={pressedCodes}
-        shiftActive={shiftActive}
-      />
+      <div className="overflow-x-auto pb-2">
+        <div className="min-w-[720px]">
+          <Keyboard
+            layout={qwertyLayout}
+            pressedCodes={pressedCodes}
+            shiftActive={shiftActive}
+          />
+        </div>
+      </div>
     </main>
   );
 };

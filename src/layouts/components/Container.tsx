@@ -1,10 +1,12 @@
 import { Outlet } from "react-router-dom";
-import { contentShell } from "@design-system";
+import { contentInner, contentShell } from "@design-system";
 
 const Container = () => {
   return (
     <main className={contentShell}>
-      <Outlet />
+      <div className={contentInner}>
+        <Outlet />
+      </div>
     </main>
   );
 };
