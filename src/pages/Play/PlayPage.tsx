@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import Keyboard from "@components/Keyboard/Keyboard";
+import KeyboardStage from "@components/Keyboard/KeyboardStage";
 import { qwertyLayout } from "@components/Keyboard/KeyboardLayout";
 import useKeyboardInput from "@components/Keyboard/useKeyboardInput";
+import { useEquippedKeyboardStyle } from "@hooks/useEquippedKeyboardStyle";
 import StatCard from "@pages/Play/components/StatCard";
 import SentenceDisplay from "@pages/Play/components/SentenceDisplay";
 import UpcomingSentences from "@pages/Play/components/UpcomingSentences";
@@ -17,6 +18,7 @@ const PlayPage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [typed, setTyped] = useState("");
   const { pressedCodes, shiftActive } = useKeyboardInput();
+  const keyboardStyle = useEquippedKeyboardStyle();
 
   // 통계 관련 state
   const [accuracy, setAccuracy] = useState(100);
@@ -155,18 +157,14 @@ const PlayPage = () => {
   };
 
   return (
-    <main className="flex-1">
-      <div className="mb-8">
+    <main className="flex-1 p-4">
+      <div className="mb-4">
         <h1 className="text-3xl font-bold">타자연습</h1>
       </div>
 
       {/* 상단 통계 카드 */}
-      <div className="grid grid-cols-2 gap-4 mb-8 lg:grid-cols-4">
-        <StatCard
-          label="정확도"
-          value={`${accuracy}%`}
-          variant="green"
-        />
+      <div className="grid grid-cols-5 gap-4 mb-2">
+        <StatCard label="정확도" value={`${accuracy}%`} variant="green" />
         <StatCard
           label="CPM"
           value={isFinished ? finalCPM : currentCPM}
@@ -180,7 +178,7 @@ const PlayPage = () => {
         />
       </div>
 
-      <div className="mb-8 rounded-2xl bg-white p-4 shadow-md sm:p-6">
+      <div className="p-6 rounded-xl shadow-md mb-4">
         {/* 현재 문장 */}
         <SentenceDisplay sentence={currentSentence} typed={typed} />
 
@@ -196,15 +194,12 @@ const PlayPage = () => {
         <UpcomingSentences sentences={remainingSentences} />
       </div>
 
-      <div className="overflow-x-auto pb-2">
-        <div className="min-w-[720px]">
-          <Keyboard
-            layout={qwertyLayout}
-            pressedCodes={pressedCodes}
-            shiftActive={shiftActive}
-          />
-        </div>
-      </div>
+      <KeyboardStage
+        layout={qwertyLayout}
+        pressedCodes={pressedCodes}
+        shiftActive={shiftActive}
+        {...keyboardStyle}
+      />
     </main>
   );
 };
