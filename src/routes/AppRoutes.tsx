@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import MainLayout from '@layouts/MainLayout';
+import HomePage from '@pages/HomePage';
 import LoginPage from '@pages/LoginPage';
 import PlayPage from '@pages/Play/PlayPage';
 import ShopPage from '@pages/Shop/ShopPage';
@@ -25,7 +26,7 @@ const AppRoutes = () =>
         },
         {
           path: '/home',
-          element: <div>Home</div>,
+          element: <HomePage />,
         },
         {
           path: '/play',
