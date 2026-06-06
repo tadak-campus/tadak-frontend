@@ -1,11 +1,13 @@
+import { useState, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
-import type { ReactNode } from "react";
 import KeyboardOutlinedIcon from "@mui/icons-material/KeyboardOutlined";
 import ShortTextOutlinedIcon from "@mui/icons-material/ShortTextOutlined";
 import NotesOutlinedIcon from "@mui/icons-material/NotesOutlined";
 import ChevronRightOutlinedIcon from "@mui/icons-material/ChevronRightOutlined";
 import { panel, panelPadding } from "@design-system";
 import { usePracticeSentences } from "@contexts/PracticeSentencesContext";
+import { DEFAULT_SENTENCES } from "@pages/Play/defaultSentences";
+import PracticeStartModal from "@pages/Play/components/PracticeStartModal";
 
 type PracticeMenu = {
   key: "basic" | "short" | "long";
@@ -26,6 +28,10 @@ const toneClass: Record<PracticeMenu["tone"], string> = {
 const PracticeMenuPage = () => {
   const navigate = useNavigate();
   const { sentences } = usePracticeSentences();
+  const [startMenu, setStartMenu] = useState<PracticeMenu | null>(null);
+
+  // 실제 연습할 문장 수 (업로드한 문장이 없으면 기본 문장 수)
+  const sentenceCount = sentences.length || DEFAULT_SENTENCES.length;
 
   const menus: PracticeMenu[] = [
     {
@@ -73,10 +79,18 @@ const PracticeMenuPage = () => {
           <PracticeMenuCard
             key={menu.key}
             menu={menu}
-            onSelect={() => menu.path && navigate(menu.path)}
+            onSelect={() => setStartMenu(menu)}
           />
         ))}
       </section>
+
+      <PracticeStartModal
+        open={startMenu !== null}
+        title={startMenu?.title ?? ""}
+        sentenceCount={sentenceCount}
+        onStart={() => startMenu?.path && navigate(startMenu.path)}
+        onCancel={() => setStartMenu(null)}
+      />
     </main>
   );
 };

@@ -18,12 +18,7 @@ import type {
   PracticeCompleteResponse,
 } from "@app-types/practice";
 import { usePracticeSentences } from "@contexts/PracticeSentencesContext";
-
-const DEFAULT_SENTENCES = [
-  "클라우드 컴퓨팅은 인터넷을 통해 필요한 만큼 컴퓨팅 자원을 제공하는 방식이다.",
-  "데이터 센터에 저장된 서버, 저장 공간 및 데이터베이스에 액세스할 수 있다.",
-  "사용자는 하드웨어 인프라를 소유할 필요 없이 유연하게 사용량을 조절한다.",
-];
+import { DEFAULT_SENTENCES } from "@pages/Play/defaultSentences";
 
 interface ApiValidationErrorDetail {
   msg?: string;
