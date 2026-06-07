@@ -4,11 +4,11 @@ type UpcomingSentencesProps = {
 
 const UpcomingSentences = ({ sentences }: UpcomingSentencesProps) => {
   return (
-    <div className="space-y-2 flex justify-center">
+    <div className="space-y-2">
       {sentences.map((sentence, i) => (
         <p
           key={i}
-          className="w-11/12 px-4 py-3 text-xl text-gray-400 bg-slate-300 rounded-xl"
+          className="w-full px-3 text-sm font-medium text-slate-400 sm:text-base"
         >
           {sentence}
         </p>

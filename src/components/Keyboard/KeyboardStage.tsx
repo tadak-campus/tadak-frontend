@@ -23,7 +23,7 @@ const KeyboardStage = ({
 }: Props) => {
   return (
     <div
-      className="relative flex justify-start overflow-x-auto overflow-y-hidden rounded-2xl bg-slate-50 bg-cover bg-center p-4 sm:p-6 lg:justify-center lg:p-8"
+      className="relative isolate flex min-h-[240px] justify-start overflow-x-auto overflow-y-hidden rounded-[24px] border border-white/80 bg-slate-50 bg-cover bg-center bg-no-repeat p-3 shadow-inner ring-1 ring-slate-100 sm:min-h-[280px] sm:p-4 lg:min-h-[300px] lg:justify-center lg:p-5"
       style={
         backgroundImageUrl
           ? { backgroundImage: `url("${backgroundImageUrl}")` }
@@ -35,17 +35,19 @@ const KeyboardStage = ({
           src={decorationImageUrl}
           alt=""
           aria-hidden
-          className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+          className="pointer-events-none absolute inset-0 z-20 h-full w-full object-cover"
         />
       )}
 
+      <div className="pointer-events-none absolute inset-0 z-0 bg-white/10" />
+
       {soundLabel && (
-        <span className="pointer-events-none absolute bottom-3 right-3 rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-slate-700">
+        <span className="pointer-events-none absolute bottom-4 right-4 z-30 rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-slate-700 shadow-sm ring-1 ring-white/80">
           ♪ {soundLabel}
         </span>
       )}
 
-      <div className="relative min-w-[720px] max-w-190 flex-1">
+      <div className="relative z-10 min-w-[860px] max-w-[920px] flex-1">
         <Keyboard
           layout={layout}
           pressedCodes={pressedCodes}

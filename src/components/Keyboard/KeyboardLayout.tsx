@@ -12,6 +12,7 @@ export type KeyboardLayout = {
 export const qwertyLayout: KeyboardLayout = {
   rows: [
     [
+      { code: "Escape", label: "Esc" },
       { code: "Backquote", label: "`", shiftLabel: "~" },
       { code: "Digit1", label: "1", shiftLabel: "!" },
       { code: "Digit2", label: "2", shiftLabel: "@" },
@@ -78,8 +79,12 @@ export const qwertyLayout: KeyboardLayout = {
       { code: "AltLeft", label: "Alt", width: 1.25 },
       { code: "Space", label: " ", width: 6.25 },
       { code: "AltRight", label: "Alt", width: 1.25 },
-      { code: "MetaRight", label: "Win", width: 1.25 },
+      { code: "Fn", label: "Fn", width: 1.25 },
       { code: "ControlRight", label: "Ctrl", width: 1.25 },
+      { code: "ArrowLeft", label: "←", width: 1 },
+      { code: "ArrowUp", label: "↑", width: 1 },
+      { code: "ArrowDown", label: "↓", width: 1 },
+      { code: "ArrowRight", label: "→", width: 1 },
     ],
   ],
 };
