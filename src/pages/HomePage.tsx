@@ -148,7 +148,6 @@ const keyboardThemes = [
 ];
 const keyboardColors = ["#c7ddff", "#ffd2e3", "#c8f7df", "#ddd6fe", "#fef3c7"];
 const supportedExtensions = [".pdf", ".ppt", ".pptx"];
-const maxFileSize = 50 * 1024 * 1024;
 
 const getErrorMessage = (error: unknown) => {
   if (isAxiosError<ApiErrorResponse>(error)) {
@@ -249,12 +248,6 @@ const HomePage = () => {
     async (file: File) => {
       if (!isSupportedFile(file)) {
         setUploadError("PDF, PPT, PPTX 파일만 업로드할 수 있습니다.");
-        setUploadMessage(null);
-        return;
-      }
-
-      if (file.size > maxFileSize) {
-        setUploadError("최대 50MB 이하 파일만 업로드할 수 있습니다.");
         setUploadMessage(null);
         return;
       }
@@ -367,7 +360,7 @@ const HomePage = () => {
                   클릭하거나 파일을 여기로 드래그하세요
                 </p>
                 <p className="mt-1 text-xs font-medium text-slate-500">
-                  지원 형식: .pdf, .ppt, .pptx (최대 50MB)
+                  지원 형식: .pdf, .ppt, .pptx
                 </p>
                 <button
                   type="button"
