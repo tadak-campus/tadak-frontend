@@ -52,30 +52,256 @@ export const SLOT_TO_TYPE: Record<EquippedSlot, ShopItemType> = {
   decoration: "DECORATION",
 };
 
+const strawberryMilkSkin: KeycapSkin = {
+    plate: "#fff1f2",
+    plateBorder: "#ffe4e6",
+    plateShadow:
+      "inset 0 1px 0 rgba(255,255,255,0.9), 0 18px 40px rgba(190,18,60,0.11)",
+    key: {
+      base: "#fffafa",
+      border: "#f9d8df",
+      text: "#5f3140",
+      shadow:
+        "inset 0 1px 0 rgba(255,255,255,0.92), 0 2px 5px rgba(190,18,60,0.09)",
+    },
+    modifierKey: {
+      base: "#fde2e7",
+      border: "#fbc7d1",
+      text: "#8a2846",
+      shadow:
+        "inset 0 1px 0 rgba(255,255,255,0.82), 0 2px 5px rgba(190,18,60,0.12)",
+    },
+    accentKey: {
+      base: "#fb7185",
+      border: "#f43f5e",
+      text: "white",
+      shadow:
+        "inset 0 1px 0 rgba(255,255,255,0.55), 0 2px 5px rgba(244,63,94,0.2)",
+    },
+    spaceKey: {
+      base: "#f9a8d4",
+      border: "#f472b6",
+      text: "#831843",
+      shadow:
+        "inset 0 1px 0 rgba(255,255,255,0.68), 0 2px 6px rgba(219,39,119,0.14)",
+    },
+    enterKey: {
+      base: "#fda4af",
+      border: "#fb7185",
+      text: "#881337",
+      shadow:
+        "inset 0 1px 0 rgba(255,255,255,0.7), 0 2px 5px rgba(225,29,72,0.14)",
+    },
+    arrowKey: {
+      base: "#fecdd3",
+      border: "#fda4af",
+      text: "#9f1239",
+      shadow:
+        "inset 0 1px 0 rgba(255,255,255,0.74), 0 2px 5px rgba(225,29,72,0.11)",
+    },
+    pressed: {
+      base: "#f43f5e",
+      border: "#e11d48",
+      text: "white",
+    },
+};
+
+const creamSodaSkin: KeycapSkin = {
+    plate: "#fffbeb",
+    plateBorder: "#fde68a",
+    plateShadow:
+      "inset 0 1px 0 rgba(255,255,255,0.9), 0 18px 40px rgba(146,64,14,0.1)",
+    key: {
+      base: "#fffef7",
+      border: "#eadfbe",
+      text: "#4b3b25",
+      shadow:
+        "inset 0 1px 0 rgba(255,255,255,0.92), 0 2px 5px rgba(146,64,14,0.09)",
+    },
+    modifierKey: {
+      base: "#fef3c7",
+      border: "#fde68a",
+      text: "#78350f",
+      shadow:
+        "inset 0 1px 0 rgba(255,255,255,0.78), 0 2px 5px rgba(217,119,6,0.12)",
+    },
+    accentKey: {
+      base: "#fdba74",
+      border: "#fb923c",
+      text: "#7c2d12",
+      shadow:
+        "inset 0 1px 0 rgba(255,255,255,0.68), 0 2px 5px rgba(234,88,12,0.16)",
+    },
+    spaceKey: {
+      base: "#fed7aa",
+      border: "#fdba74",
+      text: "#7c2d12",
+      shadow:
+        "inset 0 1px 0 rgba(255,255,255,0.74), 0 2px 6px rgba(234,88,12,0.12)",
+    },
+    enterKey: {
+      base: "#fef08a",
+      border: "#fde047",
+      text: "#713f12",
+      shadow:
+        "inset 0 1px 0 rgba(255,255,255,0.72), 0 2px 5px rgba(202,138,4,0.14)",
+    },
+    arrowKey: {
+      base: "#fcd9bd",
+      border: "#fdba74",
+      text: "#7c2d12",
+      shadow:
+        "inset 0 1px 0 rgba(255,255,255,0.74), 0 2px 5px rgba(234,88,12,0.11)",
+    },
+    pressed: {
+      base: "#f59e0b",
+      border: "#d97706",
+      text: "white",
+    },
+};
+
+const cottonCandyMintSkin: KeycapSkin = {
+    plate: "#fff1f5",
+    plateBorder: "#fbcfe8",
+    plateShadow:
+      "inset 0 1px 0 rgba(255,255,255,0.9), 0 18px 40px rgba(190,18,60,0.11)",
+    key: {
+      base: "#fff7f9",
+      border: "#f7c6d2",
+      text: "#5f3140",
+      shadow:
+        "inset 0 1px 0 rgba(255,255,255,0.92), 0 2px 5px rgba(190,18,60,0.09)",
+    },
+    modifierKey: {
+      base: "#f9c5cf",
+      border: "#f3a7b7",
+      text: "#7f1d3a",
+      shadow:
+        "inset 0 1px 0 rgba(255,255,255,0.76), 0 2px 5px rgba(190,18,60,0.13)",
+    },
+    accentKey: {
+      base: "#a7f3f8",
+      border: "#67e8f9",
+      text: "#155e75",
+      shadow:
+        "inset 0 1px 0 rgba(255,255,255,0.72), 0 2px 5px rgba(8,145,178,0.15)",
+    },
+    spaceKey: {
+      base: "#bae6fd",
+      border: "#7dd3fc",
+      text: "#075985",
+      shadow:
+        "inset 0 1px 0 rgba(255,255,255,0.76), 0 2px 6px rgba(14,165,233,0.14)",
+    },
+    enterKey: {
+      base: "#a7f3f8",
+      border: "#67e8f9",
+      text: "#155e75",
+      shadow:
+        "inset 0 1px 0 rgba(255,255,255,0.72), 0 2px 5px rgba(8,145,178,0.15)",
+    },
+    arrowKey: {
+      base: "#bae6fd",
+      border: "#7dd3fc",
+      text: "#075985",
+      shadow:
+        "inset 0 1px 0 rgba(255,255,255,0.76), 0 2px 5px rgba(14,165,233,0.14)",
+    },
+    pressed: {
+      base: "#0ea5e9",
+      border: "#0284c7",
+      text: "white",
+    },
+};
+
+const vanillaPeachBoardSkin: KeycapSkin = {
+    plate: "#f8fafc",
+    plateBorder: "#e2e8f0",
+    plateShadow:
+      "inset 0 1px 0 rgba(255,255,255,0.9), 0 18px 40px rgba(15,23,42,0.1)",
+    key: {
+      base: "#ffffff",
+      border: "#e2e8f0",
+      text: "#334155",
+      shadow:
+        "inset 0 1px 0 rgba(255,255,255,0.94), 0 2px 5px rgba(15,23,42,0.09)",
+    },
+    modifierKey: {
+      base: "#fef3c7",
+      border: "#fde68a",
+      text: "#713f12",
+      shadow:
+        "inset 0 1px 0 rgba(255,255,255,0.76), 0 2px 5px rgba(202,138,4,0.12)",
+    },
+    accentKey: {
+      base: "#fed7aa",
+      border: "#fdba74",
+      text: "#7c2d12",
+      shadow:
+        "inset 0 1px 0 rgba(255,255,255,0.72), 0 2px 5px rgba(234,88,12,0.14)",
+    },
+    spaceKey: {
+      base: "#fed7aa",
+      border: "#fdba74",
+      text: "#7c2d12",
+      shadow:
+        "inset 0 1px 0 rgba(255,255,255,0.72), 0 2px 6px rgba(234,88,12,0.13)",
+    },
+    enterKey: {
+      base: "#fef08a",
+      border: "#fde047",
+      text: "#713f12",
+      shadow:
+        "inset 0 1px 0 rgba(255,255,255,0.72), 0 2px 5px rgba(202,138,4,0.14)",
+    },
+    arrowKey: {
+      base: "#fdba74",
+      border: "#fb923c",
+      text: "#7c2d12",
+      shadow:
+        "inset 0 1px 0 rgba(255,255,255,0.68), 0 2px 5px rgba(234,88,12,0.14)",
+    },
+    pressed: {
+      base: "#f97316",
+      border: "#ea580c",
+      text: "white",
+    },
+};
+
 // TODO: 키캡 색은 API 명세에 없는 목업 표현 데이터다. KEYBOARD 아이템 id로 조회하며,
 // 매칭되는 id가 없으면 기본 스킨(defaultKeycapSkin)으로 폴백한다.
 // 실제 키캡 에셋/색 명세가 확정되면 교체한다.
 export const KEYCAP_SKINS: Record<number, KeycapSkin> = {
+  // Cloud Blue
   1: defaultKeycapSkin,
-  2: {
-    plate: "#ecfdf5",
-    base: "#a7f3d0",
-    border: "#6ee7b7",
-    text: "#065f46",
-    pressed: "#34d399",
-    pressedBorder: "#10b981",
-    pressedText: "white",
-  },
-  3: {
-    plate: "#1f2937",
-    base: "#f5f5f4",
-    border: "#d6d3d1",
-    text: "#1c1917",
-    pressed: "#f97316",
-    pressedBorder: "#ea580c",
-    pressedText: "white",
-  },
+  // Strawberry Milk
+  2: strawberryMilkSkin,
+  // Cream Soda
+  3: creamSodaSkin,
+  // Cotton Candy Mint
+  4: cottonCandyMintSkin,
+  // Vanilla Peach Board
+  5: vanillaPeachBoardSkin,
+
+  // 현재 DB에서는 "키보드 4", "키보드 5"의 실제 item id가 15, 16이다.
+  15: cottonCandyMintSkin,
+  16: vanillaPeachBoardSkin,
 };
+
+export const KEYBOARD_THEME_NAMES: Record<number, string> = {
+  1: "클라우드 블루",
+  2: "딸기 우유",
+  3: "크림 소다",
+  4: "솜사탕 민트",
+  5: "바닐라 피치",
+  15: "솜사탕 민트",
+  16: "바닐라 피치",
+};
+
+export const shopItemDisplayName = (item: ShopItem): string =>
+  item.type === "KEYBOARD"
+    ? (KEYBOARD_THEME_NAMES[item.id] ?? item.name)
+    : item.name;
 
 // 착용 KEYBOARD 아이템 → 키캡 스킨. KEYBOARD 외 타입이나 매칭 스킨이 없으면(또는 아이템이 없으면) 기본 스킨.
 export const keycapSkinForItem = (

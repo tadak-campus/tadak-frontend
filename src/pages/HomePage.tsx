@@ -23,17 +23,24 @@ import loadingFrame2 from "@assets/home/bg_loading-2.png";
 import loadingFrame3 from "@assets/home/bg_loading-3.png";
 import loadingFrame4 from "@assets/home/bg_loading-4.png";
 import uploadHeroImage from "@assets/bg_upload_hero.png";
+import { resolveAssetUrl } from "@apis/assetUrl";
 import { generatePracticeSentences } from "@apis/practice";
 import { getShopSummary } from "@apis/shop";
 import { usePracticeSentences } from "@contexts/PracticeSentencesContext";
 import { panel, panelPadding } from "@design-system";
 import KeyboardStage from "@components/Keyboard/KeyboardStage";
 import { qwertyLayout } from "@components/Keyboard/KeyboardLayout";
-import { defaultKeycapSkin } from "@components/Keyboard/cosmetics";
+import {
+  defaultKeycapSkin,
+  getKeycapStyle,
+  type KeycapSkin,
+} from "@components/Keyboard/cosmetics";
 import { useMe } from "@hooks/useMe";
 import {
   KEYCAP_SKINS,
+  KEYBOARD_THEME_NAMES,
   SLOT_TO_TYPE,
+  shopItemDisplayName,
   type ShopSummary,
 } from "@pages/Shop/shopData";
 
@@ -140,13 +147,7 @@ const mockPracticeSets: PracticeSet[] = [
   },
 ];
 
-const keyboardThemes = [
-  "파스텔 스카이",
-  "민트 소다",
-  "라벤더 드림",
-  "피치 펀더",
-];
-const keyboardColors = ["#c7ddff", "#ffd2e3", "#c8f7df", "#ddd6fe", "#fef3c7"];
+const DEFAULT_KEYBOARD_ITEM_ID = 1;
 const supportedExtensions = [".pdf", ".ppt", ".pptx"];
 
 const getErrorMessage = (error: unknown) => {
@@ -218,18 +219,74 @@ const HomePage = () => {
   const point = me?.point ?? shopSummary?.point ?? 0;
   const nickname = me?.profile_nickname ?? "민수";
 
-  const equippedKeyboard = useMemo(() => {
-    const equippedItems = me?.equipped_items ?? shopSummary?.equipped_items;
-    return equippedItems?.keyboard ?? null;
+  const equippedItems = useMemo(() => {
+    const shopEquipped = shopSummary?.equipped_items;
+    const meEquipped = me?.equipped_items;
+
+    if (!shopEquipped) return meEquipped ?? null;
+    if (!meEquipped) return shopEquipped;
+
+    return {
+      keyboard: shopEquipped.keyboard ?? meEquipped.keyboard,
+      background: shopEquipped.background ?? meEquipped.background,
+      sound: shopEquipped.sound ?? meEquipped.sound,
+      decoration: shopEquipped.decoration ?? meEquipped.decoration,
+    };
   }, [me?.equipped_items, shopSummary?.equipped_items]);
+
+  const equippedKeyboard = equippedItems?.keyboard ?? null;
+  const equippedBackgroundImageUrl =
+    resolveAssetUrl(equippedItems?.background?.asset_url ?? null) ?? undefined;
+  const equippedDecorationImageUrl =
+    resolveAssetUrl(equippedItems?.decoration?.asset_url ?? null) ?? undefined;
 
   const keycapSkin = equippedKeyboard
     ? (KEYCAP_SKINS[equippedKeyboard.id] ?? defaultKeycapSkin)
     : defaultKeycapSkin;
 
   const equippedLabel = equippedKeyboard
-    ? `${SLOT_TO_TYPE.keyboard} · ${equippedKeyboard.name}`
-    : "기본 키보드";
+    ? `${SLOT_TO_TYPE.keyboard} · ${shopItemDisplayName(equippedKeyboard)}`
+    : `${SLOT_TO_TYPE.keyboard} · ${
+        KEYBOARD_THEME_NAMES[DEFAULT_KEYBOARD_ITEM_ID] ?? "클라우드 블루"
+      }`;
+
+  const keyboardThemePreviews = useMemo(() => {
+    const keyboardItems =
+      shopSummary?.items.filter((item) => item.type === "KEYBOARD") ?? [];
+    const itemById = new Map(keyboardItems.map((item) => [item.id, item]));
+    const itemIds = new Set(keyboardItems.map((item) => item.id));
+    const hasThemeId = (id: number) =>
+      itemIds.has(id) || equippedKeyboard?.id === id;
+    const cottonCandyId = hasThemeId(15) ? 15 : hasThemeId(4) ? 4 : 15;
+    const vanillaPeachId = hasThemeId(16) ? 16 : hasThemeId(5) ? 5 : 16;
+    const preferredIds = [1, 2, 3, cottonCandyId, vanillaPeachId];
+    const ids = new Set<number>([
+      ...preferredIds,
+      ...keyboardItems
+        .map((item) => item.id)
+        .filter((id) => !preferredIds.includes(id)),
+    ]);
+
+    return Array.from(ids)
+      .filter((id) => KEYCAP_SKINS[id])
+      .map((id) => {
+        const item = itemById.get(id);
+        const isDefaultKeyboard =
+          !equippedKeyboard && id === DEFAULT_KEYBOARD_ITEM_ID;
+        const isEquipped = equippedKeyboard?.id === id || isDefaultKeyboard;
+        return {
+          id,
+          item,
+          name: item
+            ? shopItemDisplayName(item)
+            : (KEYBOARD_THEME_NAMES[id] ?? `키보드 ${id}`),
+          skin: KEYCAP_SKINS[id],
+          isEquipped,
+          isOwned: item?.is_owned || isEquipped || false,
+        };
+      })
+      .slice(0, 5);
+  }, [equippedKeyboard, shopSummary?.items]);
 
   const generatedSet: PracticeSet | null = generatedSentences.length
     ? {
@@ -472,75 +529,79 @@ const HomePage = () => {
         </article>
 
         <article className={`${panel} ${panelPadding}`}>
-          <CardHeader title="나만의 키보드 꾸미기" action="더 보기" />
-          <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
-            {keyboardThemes.map((theme, index) => (
-              <button
-                key={theme}
-                type="button"
-                className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-bold transition ${
-                  index === 0
-                    ? "bg-sky-200 text-sky-500 shadow-sm"
-                    : "bg-violet-50 text-slate-600 hover:bg-slate-100"
-                }`}
-              >
-                {theme}
-              </button>
-            ))}
+          <CardHeader title="나만의 키보드 꾸미기" action="상점으로" />
+          <div className="mt-4 flex items-center justify-between gap-3 rounded-3xl bg-sky-50/70 px-4 py-3 ring-1 ring-sky-100">
+            <div className="min-w-0">
+              <p className="text-xs font-bold text-slate-400">장착 중</p>
+              <p className="mt-1 truncate text-sm font-bold text-slate-800">
+                {equippedLabel}
+              </p>
+            </div>
+            <span className="shrink-0 rounded-full bg-white px-3 py-1.5 text-xs font-bold text-amber-600 shadow-sm ring-1 ring-amber-100">
+              {point.toLocaleString()}P
+            </span>
           </div>
 
           <div className="mt-4 overflow-x-auto rounded-3xl bg-sky-50 p-3">
-            <div className="min-w-[540px]">
+            <div className="min-w-[860px]">
               <KeyboardStage
                 layout={qwertyLayout}
                 pressedCodes={new Set()}
                 shiftActive={false}
-                backgroundImageUrl="/shop/bg-pastel.png"
-                decorationImageUrl="/shop/deco-stars.png"
+                backgroundImageUrl={equippedBackgroundImageUrl}
+                decorationImageUrl={equippedDecorationImageUrl}
                 soundLabel={equippedLabel}
                 keycapSkin={keycapSkin}
               />
             </div>
           </div>
 
-          <div className="mt-5 grid gap-4 text-xs font-semibold text-slate-500 sm:grid-cols-3">
-            <div>
-              <p>키보드 색상</p>
-              <div className="mt-2 flex gap-2">
-                {keyboardColors.map((color, index) => (
-                  <span
-                    key={color}
-                    className={`h-5 w-5 rounded-full border ${
-                      index === 0
-                        ? "border-sky-300 ring-2 ring-sky-100"
-                        : "border-white"
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            {keyboardThemePreviews.map((theme) => (
+              <a
+                key={theme.id}
+                href="/shop"
+                className={`flex items-center gap-3 rounded-2xl border bg-white/90 p-3 text-left transition hover:-translate-y-0.5 hover:border-sky-200 hover:shadow-[0_10px_24px_rgba(148,163,184,0.12)] focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-sky-200 ${
+                  theme.isEquipped
+                    ? "border-sky-300 ring-4 ring-sky-100/70"
+                    : "border-slate-100"
+                }`}
+              >
+                <KeyboardThemeMini skin={theme.skin} />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-bold text-slate-900">
+                    {theme.name}
+                  </p>
+                  <p
+                    className={`mt-1 text-xs font-bold ${
+                      theme.isEquipped
+                        ? "text-sky-500"
+                        : theme.isOwned
+                          ? "text-emerald-500"
+                          : "text-slate-400"
                     }`}
-                    style={{ backgroundColor: color }}
-                  />
-                ))}
-              </div>
-            </div>
-            <div>
-              <p>키 모양</p>
-              <div className="mt-2 flex gap-2">
-                <span className="h-7 w-7 rounded-lg border-2 border-sky-200" />
-                <span className="h-7 w-7 rounded-full border border-slate-200" />
-                <span className="h-7 w-7 rounded-xl border border-slate-200" />
-              </div>
-            </div>
-            <div>
-              <p>효과</p>
-              <div className="mt-2 flex h-7 w-13 items-center rounded-full bg-sky-200 p-1">
-                <span className="ml-auto h-5 w-5 rounded-full bg-white shadow-sm" />
-              </div>
-            </div>
+                  >
+                    {theme.isEquipped
+                      ? "적용중"
+                      : theme.isOwned
+                        ? "보유중"
+                        : "상점에서 구매"}
+                  </p>
+                </div>
+                <ChevronRightOutlinedIcon
+                  className="shrink-0 text-slate-300"
+                  sx={{ fontSize: 20 }}
+                />
+              </a>
+            ))}
           </div>
 
           <a
             href="/shop"
             className="mt-5 flex items-center justify-center gap-2 rounded-2xl border border-sky-200 bg-white px-4 py-3 text-sm font-bold text-sky-500 transition hover:bg-sky-50 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-sky-200"
           >
-            <DownloadOutlinedIcon fontSize="small" />내 키보드 저장하기
+            <DownloadOutlinedIcon fontSize="small" />
+            타닥상점에서 키보드 바꾸기
           </a>
         </article>
       </section>
@@ -604,6 +665,50 @@ const GenerationLoadingDropzone = ({
           "연습 세트를 생성하고 있어요."
         )}
       </p>
+    </div>
+  );
+};
+
+const KeyboardThemeMini = ({ skin }: { skin: KeycapSkin }) => {
+  const key = getKeycapStyle(skin, "key");
+  const modifier = getKeycapStyle(skin, "modifierKey");
+  const accent = getKeycapStyle(skin, "accentKey");
+  const space = getKeycapStyle(skin, "spaceKey");
+  const enter = getKeycapStyle(skin, "enterKey");
+  const previewKeys = [
+    accent,
+    key,
+    key,
+    modifier,
+    key,
+    enter,
+    modifier,
+    key,
+    key,
+    space,
+  ];
+
+  return (
+    <div
+      className="grid h-12 w-24 shrink-0 grid-cols-6 gap-1 rounded-xl border p-1.5 shadow-inner"
+      style={{
+        backgroundColor: skin.plate,
+        borderColor: skin.plateBorder ?? "rgba(255,255,255,0.8)",
+      }}
+    >
+      {previewKeys.map((style, index) => (
+        <span
+          key={index}
+          className={`rounded-[4px] border ${
+            index === previewKeys.length - 1 ? "col-span-3" : "col-span-1"
+          }`}
+          style={{
+            backgroundColor: style.base,
+            borderColor: style.border,
+            boxShadow: style.shadow,
+          }}
+        />
+      ))}
     </div>
   );
 };

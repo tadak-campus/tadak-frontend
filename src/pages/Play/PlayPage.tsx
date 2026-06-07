@@ -6,6 +6,7 @@ import { qwertyLayout } from "@components/Keyboard/KeyboardLayout";
 import useKeyboardInput from "@components/Keyboard/useKeyboardInput";
 import { useEquippedKeyboardStyle } from "@hooks/useEquippedKeyboardStyle";
 import { useTypingSound } from "@hooks/useTypingSound";
+import { panel } from "@design-system";
 import StatCard from "@pages/Play/components/StatCard";
 import SentenceDisplay from "@pages/Play/components/SentenceDisplay";
 import UpcomingSentences from "@pages/Play/components/UpcomingSentences";
@@ -65,7 +66,8 @@ const PlayPage = () => {
   // 결과 모달 관련 state
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<ResultModalStatus>("loading");
+  const [submitStatus, setSubmitStatus] =
+    useState<ResultModalStatus>("loading");
   const [completeResult, setCompleteResult] =
     useState<PracticeCompleteResponse | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -256,13 +258,12 @@ const PlayPage = () => {
   };
 
   return (
-    <main className="flex-1 p-4">
-      <div className="mb-4">
-        <h1 className="text-3xl font-bold">타자연습</h1>
-      </div>
-
+    <main className="mx-auto flex h-[calc(100dvh-5.75rem)] w-full max-w-[1440px] flex-col gap-3 overflow-hidden lg:h-[calc(100dvh-6.5rem)]">
       {/* 상단 통계 카드 */}
-      <div className="grid grid-cols-5 gap-4 mb-2">
+      <section
+        aria-label="타자연습 통계"
+        className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3"
+      >
         <StatCard label="정확도" value={`${accuracy}%`} variant="green" />
         <StatCard
           label="CPM"
@@ -275,9 +276,9 @@ const PlayPage = () => {
           value={elapsedSeconds}
           variant="purple"
         />
-      </div>
+      </section>
 
-      <div className="p-6 rounded-xl shadow-md mb-4">
+      <section className={`${panel} flex shrink-0 flex-col gap-2 p-3 sm:p-4`}>
         {/* 현재 문장 */}
         <SentenceDisplay sentence={currentSentence} typed={typed} />
 
@@ -291,7 +292,7 @@ const PlayPage = () => {
 
         {/* 다음 문장들 (회색, 작게) */}
         <UpcomingSentences sentences={remainingSentences} />
-      </div>
+      </section>
 
       <KeyboardStage
         layout={qwertyLayout}

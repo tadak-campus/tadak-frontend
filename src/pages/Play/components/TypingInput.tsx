@@ -12,10 +12,11 @@ const TypingInput = forwardRef<HTMLInputElement, TypingInputProps>(
       <input
         ref={ref}
         type="text"
+        aria-label="타자 입력"
         value={value}
         onChange={onChange}
         onKeyDown={onKeyDown}
-        className="w-full px-4 py-3 border-3 border-slate-300 rounded-xl text-2xl leading-relaxed mb-2 focus:outline-none bg-slate-300"
+        className="w-full rounded-2xl border-2 border-slate-200 bg-white px-4 py-2 text-lg font-semibold leading-8 text-slate-950 shadow-sm transition focus:border-sky-300 focus:outline-none focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-sky-300 sm:text-xl sm:leading-8"
       />
     );
   },

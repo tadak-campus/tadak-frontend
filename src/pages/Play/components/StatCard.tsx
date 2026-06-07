@@ -37,10 +37,16 @@ const StatCard = ({ label, value, variant }: StatCardProps) => {
 
   return (
     <div
-      className={`flex flex-col items-center p-4 rounded-2xl border-2 ${styles.container}`}
+      className={`flex min-h-[50px] items-center justify-center gap-3 rounded-2xl border p-3 text-center shadow-[0_10px_20px_rgba(15,23,42,0.04)] sm:min-h-[56px] sm:p-4 ${styles.container}`}
     >
-      <div className={styles.label}>{label}</div>
-      <div className={`font-bold ${styles.value}`}>{value}</div>
+      <div className={`text-xs font-bold sm:text-sm ${styles.label}`}>
+        {label}
+      </div>
+      <div
+        className={`text-md font-black leading-none sm:text-lg ${styles.value}`}
+      >
+        {value}
+      </div>
     </div>
   );
 };
